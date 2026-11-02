@@ -60,24 +60,31 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Rich Dark Chocolate Obsidian Card */
-.card-chocolate {
-  background-color: #171211;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Glassmorphism Obsidian Card (bg-neutral-900/40 + backdrop-blur-md + border-white/10) */
+.card-chocolate,
+.glass-card {
+  background-color: rgba(23, 23, 23, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.65);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.card-chocolate:hover {
-  background-color: #1c1513;
-  border-color: rgba(221, 107, 77, 0.35);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.75), 0 0 24px rgba(221, 107, 77, 0.15);
+.card-chocolate:hover,
+.glass-card:hover {
+  background-color: rgba(23, 23, 23, 0.65);
+  border-color: rgba(221, 107, 77, 0.45);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.8), 0 0 28px rgba(221, 107, 77, 0.2);
 }
 
-/* Secondary Elevated Chocolate Panel */
-.card-chocolate-elevated {
-  background-color: #1c1513;
-  border: 1px solid rgba(221, 107, 77, 0.2);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.75), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+/* Secondary Elevated Glass Panel */
+.card-chocolate-elevated,
+.glass-card-elevated {
+  background-color: rgba(23, 23, 23, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.75), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 /* Primary Burnt Orange / Copper Button */
@@ -116,4 +123,100 @@
 .glow-copper {
   box-shadow: 0 0 24px rgba(221, 107, 77, 0.25);
 }
+
+/* Subtle Architectural Grid Texture */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+/* Dual Radial Ambient Glows */
+.radial-glow-copper {
+  background: radial-gradient(circle at 50% 0%, rgba(221, 107, 77, 0.22) 0%, rgba(221, 107, 77, 0.03) 55%, transparent 75%);
+}
+
+.radial-glow-cyan {
+  background: radial-gradient(circle at 85% 85%, rgba(14, 165, 233, 0.08) 0%, transparent 60%);
+}
+
+/* Glassmorphism Surface Utility */
+.glass-panel-elevated {
+  background: rgba(23, 18, 17, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* Button Glow on Hover with Scale */
+.btn-glow-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-glow-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 26px rgba(221, 107, 77, 0.55), 0 0 6px rgba(221, 107, 77, 0.85);
+}
+
+/* Strict 1-Page Print Media Rules for Official Demo Voucher */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  
+  html, body {
+    background-color: #0b0b0b !important;
+    background-image: none !important;
+    color: #fbf8f5 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    height: 100% !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Completely suppress all background interactive elements */
+  header,
+  main,
+  footer,
+  .chatbot-widget,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Single-page voucher isolated full-screen container */
+  .print-page-exact {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12mm !important;
+    margin: 0 !important;
+    background: #0b0b0b !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    box-sizing: border-box !important;
+    z-index: 99999 !important;
+  }
+
+  .print-voucher-card {
+    width: 100% !important;
+    max-width: 180mm !important;
+    background: #140e0d !important;
+    border: 1.5px solid rgba(221, 107, 77, 0.55) !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+  }
+}
+
+
 

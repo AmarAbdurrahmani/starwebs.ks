@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Gauge, Zap, Smartphone, ShieldCheck, CheckCircle2, MessageCircle, Instagram } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface HeroSectionProps {
   onOpenFreeDemo: () => void;
@@ -25,11 +26,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       />
 
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mb-16">
-        {/* Left Column: Bold Impactful Typography & Value Proposition */}
+        {/* Left Column: Bold Impactful Typography & Value Proposition with Staggered Motion */}
         <div className="lg:col-span-7 flex flex-col justify-center">
           {/* Header Badges with WhatsApp and Instagram */}
-          <div className="flex flex-wrap items-center gap-2.5 mb-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#171211] border border-white/10 backdrop-blur-md shadow-inner">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex flex-wrap items-center gap-2.5 mb-6"
+          >
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-900/50 border border-white/10 backdrop-blur-md shadow-inner">
               <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] shadow-[0_0_8px_#dd6b4d] animate-pulse" />
               <span className="font-body text-[11px] font-bold tracking-[0.08em] uppercase text-[#ff9d82]">
                 Digital Engineering & Web Agency
@@ -41,52 +47,78 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               href="https://instagram.com/starwebs.ks"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#171211] border border-white/10 text-xs text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/40 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900/50 border border-white/10 text-xs text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/40 transition-colors backdrop-blur-md"
             >
               <Instagram className="w-3.5 h-3.5 text-[#dd6b4d]" />
               <span className="text-[11px] font-mono-tabular">@starwebs.ks</span>
             </a>
-          </div>
+          </motion.div>
 
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[62px] font-extrabold leading-[1.08] tracking-[-0.03em] text-[#fbf8f5] mb-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display text-4xl sm:text-5xl lg:text-[62px] font-extrabold leading-[1.08] tracking-[-0.03em] text-[#fbf8f5] mb-6 text-balance"
+          >
             Crafting High-Performance, Modern & Mobile-Friendly Websites for Ambitious Businesses
-          </h1>
+          </motion.h1>
 
-          <p className="font-body text-base lg:text-lg leading-relaxed text-[#b3a8a2] max-w-2xl mb-8">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            className="font-body text-base lg:text-lg leading-relaxed text-[#b3a8a2] max-w-2xl mb-8"
+          >
             At <strong className="text-[#fbf8f5] font-semibold">starwebs.ks</strong>, we replace slow, bloated templates with bespoke web engineering. From headless e-commerce stores to lightning-fast web applications, we build digital flagship products engineered for speed, conversion, and clean design.
-          </p>
+          </motion.p>
 
-          {/* CTAs Row including Prominent WhatsApp Button */}
-          <div className="flex flex-wrap items-center gap-3.5 mb-2">
-            <button
+          {/* CTAs Row including Prominent WhatsApp Button with scale-105 hover and glowing border */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.42 }}
+            className="flex flex-wrap items-center gap-3.5 mb-2"
+          >
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
               onClick={onOpenFreeDemo}
-              className="btn-primary-orange px-7 py-3.5 text-xs font-bold rounded-lg tracking-wider uppercase flex items-center gap-2 cursor-pointer shadow-lg"
+              className="btn-primary-orange btn-glow-hover px-7 py-3.5 text-xs font-bold rounded-lg tracking-wider uppercase flex items-center gap-2 cursor-pointer shadow-lg"
             >
               <span>GET A FREE DEMO</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </motion.button>
 
             {/* Prominent WhatsApp Button in Hero */}
-            <a
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
               href="https://wa.me/38348881191"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-3.5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-950 hover:border-emerald-500/80 transition-all text-xs font-bold uppercase tracking-wider cursor-pointer shadow-md"
+              className="flex items-center gap-2 px-5 py-3.5 rounded-lg bg-emerald-950/70 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/80 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all text-xs font-bold uppercase tracking-wider cursor-pointer shadow-md"
             >
               <MessageCircle className="w-4 h-4 text-emerald-400" />
-              <span>Message us on WhatsApp: +383 48 881 191</span>
-            </a>
+              <span>WhatsApp: +383 48 881 191</span>
+            </motion.a>
 
-            <button
-              onClick={onExploreServices}
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onOpenPortfolio}
               className="btn-secondary-dark px-5 py-3.5 text-xs font-semibold rounded-lg tracking-wider uppercase cursor-pointer"
             >
-              EXPLORE SERVICES
-            </button>
-          </div>
+              SHIKO PORTOFOLIN
+            </motion.button>
+          </motion.div>
 
           {/* Trust Guarantees */}
-          <div className="mt-8 pt-6 border-t border-white/[0.08] flex flex-wrap items-center gap-6 text-xs text-[#b3a8a2]">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="mt-8 pt-6 border-t border-white/[0.08] flex flex-wrap items-center gap-6 text-xs text-[#b3a8a2]"
+          >
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 text-[#dd6b4d]" />
               <span>&lt;800ms Average Load Speed</span>
@@ -101,11 +133,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <ShieldCheck className="w-4 h-4 text-[#dd6b4d]" />
               <span>Clean Scalable TypeScript Code</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Column: Interactive Performance & Engineering Benchmark Engine */}
-        <div className="lg:col-span-5">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-5"
+        >
           <div className="p-6 rounded-2xl card-chocolate border border-white/[0.12] relative overflow-hidden shadow-2xl">
             {/* Top Specular catch light */}
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#dd6b4d]/40 to-transparent" />
@@ -238,7 +275,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

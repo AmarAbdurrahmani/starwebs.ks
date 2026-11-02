@@ -248,7 +248,7 @@ export const ContactSection: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="btn-primary-orange w-full py-4 text-xs rounded-lg uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xl font-bold"
+                  className="btn-primary-orange btn-glow-hover w-full py-4 text-xs rounded-xl uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xl font-bold"
                 >
                   <Send className="w-4 h-4" />
                   <span>REQUEST CONSULTATION & CUSTOM QUOTE</span>

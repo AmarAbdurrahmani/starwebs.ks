@@ -85,6 +85,132 @@ export const AGENCY_SERVICES: AgencyService[] = [
 
 export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
+    id: 'aa-streetwear',
+    title: 'A&A Streetwear Store',
+    tagline: 'Dark Minimalist Streetwear E-Commerce & Rapid Checkout',
+    client: 'A&A Street Wear Atelier',
+    category: 'E-Commerce',
+    year: '2025',
+    imageUrl: '/assets/aistudio/image_8ecb0193.png',
+    description: 'Dyqan modë dark minimalist me optimizim për celular, sub-second product filtering dhe checkout pa fërkime. Eksperiencë luksoze e blerjeve me estetikë obsidian.',
+    keyOutcomes: [
+      { metric: '+48.6%', label: 'Mobile Conversion' },
+      { metric: '0.42s', label: 'Filter Speed' },
+      { metric: '99/100', label: 'Core Web Vitals' }
+    ],
+    techStack: ['Next.js 15', 'Tailwind CSS', 'Shopify Storefront API', 'Stripe Elements', 'Framer Motion'],
+    desktopMockup: {
+      browserUrl: 'https://aa-streetwear.store/shop/hoodies',
+      heading: 'High Quality Cool Hoodies & Street Fashion',
+      subheading: 'Curated drop collection featuring heavyweight french terry and oversized streetwear silhouettes',
+      stats: [
+        { label: 'Catalog Size', value: '140+ Items' },
+        { label: 'Cart Drop-off', value: '-34%' },
+        { label: 'Dispatch', value: 'Global Express' }
+      ],
+      uiTheme: 'Dark Obsidian Minimalist',
+      features: ['1-Click Apple/Google Pay Checkout', 'Instant Size & Inventory Matrix', 'High-Res Fabric Detail Zoom']
+    },
+    mobileMockup: {
+      heading: 'A&A Mobile Bag & Fast Checkout',
+      quickStats: [
+        { label: 'Active Drop', value: 'Live' },
+        { label: 'Cart Status', value: 'Saved' }
+      ],
+      actionLabel: 'Complete Order with Apple Pay',
+      screenHighlight: 'Thumb-zone rapid sizing selector with zero layout shift'
+    },
+    testimonial: {
+      quote: 'starwebs.ks krijoi dyqanin tonë online me një estetikë të pakrahasueshme. Shpejtësia në celular rriti shitjet menjëherë pas lansimit.',
+      author: 'Ardit Krasniqi',
+      role: 'Creative Director & Co-Founder, A&A Streetwear'
+    }
+  },
+  {
+    id: 'elevate-audio',
+    title: 'Elevate Luxury Audio',
+    tagline: 'High-Contrast Audiophile & Premium Acoustics Showcase',
+    client: 'Eave Acoustic Labs',
+    category: 'Product Showcase',
+    year: '2025',
+    imageUrl: '/assets/aistudio/image_8989395a.png',
+    description: 'Faqe prezantuese luksoze për dëgjuese & pajisje premium audio me kontrast të lartë UI/UX, pamje editoriale dhe arkitekturë akustike interaktive.',
+    keyOutcomes: [
+      { metric: '+74%', label: 'Avg Dwell Time' },
+      { metric: '0.52s', label: 'First Contentful Paint' },
+      { metric: '2.4x', label: 'VIP Inquiries' }
+    ],
+    techStack: ['React 19', 'TypeScript', 'Tailwind CSS v4', 'Framer Motion', 'WebAudio API'],
+    desktopMockup: {
+      browserUrl: 'https://eave-audio.luxury/collections/m1-monitors',
+      heading: 'Elevate Your Audio Indulgence',
+      subheading: 'Immerse yourself in precision planar magnetic sound, handcrafted magnesium driver housings and bespoke leather craftsmanship',
+      stats: [
+        { label: 'Frequency Resp.', value: '5Hz - 50kHz' },
+        { label: 'Distortion', value: '<0.05% THD' },
+        { label: 'Finish', value: 'Matte Obsidian' }
+      ],
+      uiTheme: 'High-Contrast Editorial Luxury',
+      features: ['Interactive Acoustic Frequency Graph', 'Bespoke Consultation Booking', 'Spatial Audio Preview Mode']
+    },
+    mobileMockup: {
+      heading: 'Eave Mobile Listening Suite',
+      quickStats: [
+        { label: 'Acoustics', value: 'Reference' },
+        { label: 'Driver', value: 'Planar 50mm' }
+      ],
+      actionLabel: 'Reserve VIP Studio Audition',
+      screenHighlight: 'Fluid editorial typography with high contrast mobile legibility'
+    },
+    testimonial: {
+      quote: 'Dizajni i starwebs.ks përcjell saktësisht cilësinë e produktit tonë. Çdo vizitor përjeton menjëherë ndjesinë e një marke të nivelit botëror.',
+      author: 'Valon Berisha',
+      role: 'Head of Product Engineering, Eave Acoustics'
+    }
+  },
+  {
+    id: 'visionwarp-vr',
+    title: 'VisionWarp VR Experience',
+    tagline: 'Spatial Computing & Virtual Reality Hardware Portal',
+    client: 'VisionWarp Systems',
+    category: 'Tech & Innovation',
+    year: '2025',
+    imageUrl: '/assets/aistudio/image_cf5b4fb1.png',
+    description: 'Portal teknologjik me renderime 3D për pajisje të realitetit virtual, telemetri të performancës në kohë reale dhe modul për rezervime hardware.',
+    keyOutcomes: [
+      { metric: '120 FPS', label: 'Interactive 3D Render' },
+      { metric: '<380ms', label: 'Edge Page Hydration' },
+      { metric: '18.5k+', label: 'Global Pre-Orders' }
+    ],
+    techStack: ['Next.js', 'Three.js / WebGL', 'Tailwind CSS', 'TypeScript', 'Edge Workers'],
+    desktopMockup: {
+      browserUrl: 'https://visionwarp.io/headsets/quantum-pro',
+      heading: 'Experience the Future of Virtual Reality',
+      subheading: 'Micro-OLED 4K dual optical displays with dynamic foveated rendering and zero sub-millimeter motion latency',
+      stats: [
+        { label: 'Resolution', value: '4K Per Eye' },
+        { label: 'Refresh Rate', value: '120Hz Low-Persistence' },
+        { label: 'Tracking', value: 'Inside-Out 6DoF' }
+      ],
+      uiTheme: 'Spatial Computing Obsidian',
+      features: ['Real-time 3D Hardware Exploded View', 'Interactive Optical Clarity Demo', 'Enterprise SDK Documentation']
+    },
+    mobileMockup: {
+      heading: 'VisionWarp Mobile Experience',
+      quickStats: [
+        { label: 'Latency', value: '4ms MTP' },
+        { label: 'FOV', value: '115° Ultrawide' }
+      ],
+      actionLabel: 'Pre-Order VisionWarp Quantum',
+      screenHighlight: 'Ultra-smooth 60fps mobile hardware carousel with tactile haptics'
+    },
+    testimonial: {
+      quote: 'Inxhinieria e starwebs.ks tejkaloi pritjet tona. Portali arriti të mbajë mbi 100k vizitorë njëkohësisht gjatë njoftimit zyrtar pa asnjë ngadalësim.',
+      author: 'Dr. Kastriot Rama',
+      role: 'Chief Scientist, VisionWarp'
+    }
+  },
+  {
     id: 'aura-capital',
     title: 'Aura Capital Portal',
     tagline: 'Private Wealth & Asset Orchestration Platform',

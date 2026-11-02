@@ -19,8 +19,9 @@ export interface PortfolioProject {
   title: string;
   tagline: string;
   client: string;
-  category: 'Web App' | 'E-Commerce' | 'Corporate' | 'Mobile-First';
+  category: 'E-Commerce' | 'Product Showcase' | 'Tech & Innovation' | 'Web App' | 'Corporate' | string;
   year: string;
+  imageUrl?: string;
   description: string;
   keyOutcomes: {
     metric: string;

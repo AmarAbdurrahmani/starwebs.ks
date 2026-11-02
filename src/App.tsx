@@ -42,7 +42,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0b0b] text-[#fbf8f5] selection:bg-[#dd6b4d]/40 selection:text-white relative">
+    <div className="min-h-screen bg-black text-[#fbf8f5] selection:bg-[#dd6b4d]/40 selection:text-white relative bg-grid-pattern overflow-x-hidden">
+      {/* Ambient neon radial glows (Burnt Orange & Vivid Cyan) */}
+      <div className="fixed inset-0 pointer-events-none z-0 radial-glow-copper opacity-75" />
+      <div className="fixed inset-0 pointer-events-none z-0 radial-glow-cyan opacity-50" />
+
       {/* 1. Navigation Bar with STARWEBS.KS Wordmark, WhatsApp & Instagram Links, and GET A FREE DEMO */}
       <TopBar
         activeSection={activeSection}
@@ -50,7 +54,7 @@ export default function App() {
         onOpenFreeDemo={handleOpenFreeDemoDefault}
       />
 
-      <main className="relative">
+      <main className="relative pt-16 sm:pt-20 print:hidden">
         {/* 2. Hero Section with Prominent WhatsApp Contact (+383 48 881 191) & Speed Engine */}
         <HeroSection
           onOpenFreeDemo={handleOpenFreeDemoDefault}
@@ -85,10 +89,12 @@ export default function App() {
       </main>
 
       {/* Modern Luxury Obsidian Footer with WhatsApp & Instagram Links */}
-      <Footer
-        onNavigate={handleNavigate}
-        onOpenFreeDemo={handleOpenFreeDemoDefault}
-      />
+      <div className="print:hidden">
+        <Footer
+          onNavigate={handleNavigate}
+          onOpenFreeDemo={handleOpenFreeDemoDefault}
+        />
+      </div>
 
       {/* Confirmed Multi-Step Free Demo & Consultation Modal */}
       <FreeDemoModal

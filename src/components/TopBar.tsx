@@ -13,7 +13,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenFreeDemo
 }) => {
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0b0b0b]/92 backdrop-blur-md border-b border-white/[0.08] transition-all">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-neutral-950/70 backdrop-blur-md border-b border-white/10 transition-all print:hidden">
       <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-6 px-6 lg:px-12 py-3.5">
         {/* Zone 1: Single text element wordmark + Instagram link */}
         <div className="flex items-center gap-4">
@@ -35,7 +35,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             title="Follow starwebs.ks on Instagram"
-            className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/40 transition-colors"
+            className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/40 transition-colors backdrop-blur-md"
           >
             <Instagram className="w-3.5 h-3.5 text-[#dd6b4d]" />
             <span className="text-[11px] font-mono-tabular">@starwebs.ks</span>
@@ -120,7 +120,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           <button
             onClick={onOpenFreeDemo}
-            className="btn-primary-orange px-4 sm:px-5 py-2.5 text-xs rounded-lg uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5"
+            className="btn-primary-orange btn-glow-hover px-4 sm:px-5 py-2.5 text-xs rounded-lg uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 shadow-md"
           >
             <span>GET A FREE DEMO</span>
             <ArrowRight className="w-3.5 h-3.5" />

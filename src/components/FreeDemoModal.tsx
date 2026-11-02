@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, ArrowRight, ArrowLeft, Printer, Sparkles, Send, ShieldCheck } from 'lucide-react';
+import { 
+  X, 
+  CheckCircle2, 
+  ArrowRight, 
+  ArrowLeft, 
+  Printer, 
+  Sparkles, 
+  Send, 
+  ShieldCheck, 
+  Award, 
+  FileCheck2,
+  Lock,
+  PhoneCall
+} from 'lucide-react';
 
 interface FreeDemoModalProps {
   isOpen: boolean;
@@ -34,6 +47,13 @@ export const FreeDemoModal: React.FC<FreeDemoModalProps> = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [validationError, setValidationError] = useState('');
 
+  // Stable Unique Reference & Timestamp
+  const [demoRef] = useState(() => 'SW-REF-' + Math.floor(100000 + Math.random() * 900000));
+  const [issuedDate] = useState(() => {
+    const now = new Date();
+    return now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  });
+
   if (!isOpen) return null;
 
   const handleNextStep = () => {
@@ -48,22 +68,27 @@ export const FreeDemoModal: React.FC<FreeDemoModalProps> = ({
   const handleFinalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !email.includes('@')) {
-      setValidationError('Please provide a valid full name and business email address.');
+      setValidationError('Ju lutem jepni emrin e plotë dhe një email të vlefshëm biznesi.');
       return;
     }
     setValidationError('');
     setIsCompleted(true);
   };
 
-  const demoRef = 'DEMO-SW-' + Math.floor(1000 + Math.random() * 9000);
+  const handleResetAndClose = () => {
+    setIsCompleted(false);
+    setCurrentStep(1);
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl card-chocolate-elevated border border-white/[0.15] p-6 sm:p-8 bg-[#171211] shadow-2xl">
-        {/* Close Button */}
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-200 ${isCompleted ? 'print-page-exact' : ''}`}>
+      <div className={`relative w-full ${isCompleted ? 'max-w-3xl print-voucher-card' : 'max-w-2xl'} max-h-[94vh] overflow-y-auto rounded-3xl card-chocolate-elevated border border-white/[0.15] p-5 sm:p-8 bg-[#140e0d] shadow-[0_24px_70px_rgba(0,0,0,0.95)]`}>
+        {/* Close Button (Hidden on Print) */}
         <button
-          onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-lg bg-white/[0.06] text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.12] transition-colors cursor-pointer"
+          onClick={handleResetAndClose}
+          className="absolute top-5 right-5 p-2 rounded-xl bg-white/[0.06] text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.12] transition-colors cursor-pointer print:hidden z-10"
+          title="Mbyll dritaren"
         >
           <X className="w-5 h-5" />
         </button>
@@ -75,16 +100,16 @@ export const FreeDemoModal: React.FC<FreeDemoModalProps> = ({
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-pulse" />
                 <span className="font-mono-tabular text-xs font-bold text-[#dd6b4d] uppercase tracking-wider">
-                  Free Interactive Demo & Architectural Consultation
+                  Rezervim Demo Falas & Konsultim Arkitekture
                 </span>
               </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold text-[#fbf8f5]">
-                {currentStep === 1 && 'What are your primary website goals?'}
-                {currentStep === 2 && 'Timeline & Budget Expectations'}
-                {currentStep === 3 && 'Where should we send your custom demo?'}
+              <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[#fbf8f5]">
+                {currentStep === 1 && 'Cilat janë qëllimet kryesore të projektit tuaj?'}
+                {currentStep === 2 && 'Afati Kohor & Pritshmëritë e Buxhetit'}
+                {currentStep === 3 && 'Ku dëshironi t\'jua dërgojmë prototipin live?'}
               </h3>
               <p className="text-xs text-[#b3a8a2] mt-1">
-                Step {currentStep} of 3 · Custom interactive prototype prepared by an engineer.
+                Hapi {currentStep} nga 3 · Prototip interaktiv i përgatitur posaçërisht nga inxhinierët tanë.
               </p>
 
               {/* Progress Bar */}
@@ -99,189 +124,204 @@ export const FreeDemoModal: React.FC<FreeDemoModalProps> = ({
             {/* Step 1: Goals & Focus */}
             {currentStep === 1 && (
               <div className="space-y-5 animate-in fade-in duration-200">
-                <div className="space-y-2.5">
-                  <span className="block text-xs font-mono-tabular uppercase text-[#b3a8a2]">
-                    Select Project Typology:
-                  </span>
+                <label className="block text-xs font-mono-tabular uppercase tracking-wider text-[#b3a8a2]">
+                  Zgjidhni fokusin kryesor të uebfaqes tuaj:
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {[
-                    { title: 'New High-Performance Website', desc: 'Bespoke corporate / portfolio build from scratch with sub-second speeds' },
-                    { title: 'Full Website Redesign & Modernization', desc: 'Migrate from sluggish CMS to modern React/Next.js architecture' },
-                    { title: 'High-Conversion E-Commerce Store', desc: 'Custom headless storefront with 1-click checkout & lightning cart' },
-                    { title: 'Web Application & Client Portal', desc: 'Complex authenticated platform with interactive dashboards & APIs' }
-                  ].map((item, idx) => (
+                    { id: 'New High-Performance Website', label: 'Uebfaqe e Re me Performancë të Lartë', desc: 'Arkitekturë moderne pa shabllone të ngadalta' },
+                    { id: 'Headless E-Commerce Store', label: 'Dyqan E-Commerce Headless', desc: 'Pagesa me 1-klik, filtrim sub-sekond dhe Shopify API' },
+                    { id: 'Mobile-First Website Redesign', label: 'Rindërtim i Plotë për Celular', desc: 'Optimizim ergonomik për gishtat dhe CLS zero' },
+                    { id: 'Custom Web Application / Portal', label: 'Aplikacion Uebi / Portal Klienti', desc: 'Autentikim, baza të dhënash dhe telemetri' }
+                  ].map((opt) => (
                     <button
-                      key={idx}
-                      onClick={() => setSelectedObjective(item.title)}
-                      className={`w-full text-left p-3.5 rounded-xl border text-xs transition-all cursor-pointer flex items-center justify-between ${
-                        selectedObjective === item.title
-                          ? 'bg-[#221816] border-[#dd6b4d] shadow-[0_0_16px_rgba(221,107,77,0.2)] text-[#fbf8f5]'
-                          : 'bg-[#0b0b0b]/60 border-white/[0.08] text-[#b3a8a2] hover:border-white/20'
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setSelectedObjective(opt.id)}
+                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        selectedObjective === opt.id
+                          ? 'bg-[#221816] border-[#dd6b4d] shadow-[0_0_20px_rgba(221,107,77,0.25)]'
+                          : 'bg-[#0b0b0b] border-white/[0.08] hover:border-white/20'
                       }`}
                     >
-                      <div>
-                        <span className="font-display text-sm font-bold block mb-0.5 text-[#fbf8f5]">
-                          {item.title}
-                        </span>
-                        <span className="text-[11px] text-[#b3a8a2]">{item.desc}</span>
-                      </div>
-                      {selectedObjective === item.title && (
-                        <CheckCircle2 className="w-5 h-5 text-[#dd6b4d] shrink-0 ml-3" />
-                      )}
+                      <span className="font-display text-sm font-bold text-[#fbf8f5] block mb-1">
+                        {opt.label}
+                      </span>
+                      <span className="text-xs text-[#b3a8a2] block">
+                        {opt.desc}
+                      </span>
                     </button>
                   ))}
                 </div>
 
+                <div className="pt-2">
+                  <label className="block text-xs font-mono-tabular uppercase tracking-wider text-[#b3a8a2] mb-2">
+                    Prioriteti i Pajisjeve:
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {['Desktop & Mobile First', 'Pure Mobile Focus', 'Desktop Focused'].map((dev) => (
+                      <button
+                        key={dev}
+                        type="button"
+                        onClick={() => setTargetDevice(dev)}
+                        className={`py-2 px-3 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
+                          targetDevice === dev
+                            ? 'bg-[#dd6b4d]/20 border-[#dd6b4d] text-[#ff9d82]'
+                            : 'bg-[#0b0b0b] border-white/[0.08] text-[#b3a8a2]'
+                        }`}
+                      >
+                        {dev}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="flex justify-end pt-4 border-t border-white/[0.08]">
                   <button
+                    type="button"
                     onClick={handleNextStep}
-                    className="btn-primary-orange px-6 py-2.5 text-xs rounded-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer font-bold"
+                    className="btn-primary-orange px-6 py-2.5 text-xs rounded-xl uppercase tracking-wider flex items-center gap-2 cursor-pointer font-bold shadow-md"
                   >
-                    <span>NEXT STEP</span>
+                    <span>Vazhdo te Hapi 2</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Step 2: Budget & Timeframe */}
+            {/* Step 2: Timeline & Budget Expectations */}
             {currentStep === 2 && (
               <div className="space-y-5 animate-in fade-in duration-200">
                 <div>
-                  <span className="block text-xs font-mono-tabular uppercase text-[#b3a8a2] mb-2.5">
-                    Anticipated Investment Tier:
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <label className="block text-xs font-mono-tabular uppercase tracking-wider text-[#b3a8a2] mb-2">
+                    Përzgjidhni afatin e synuar të dorëzimit:
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     {[
-                      { tier: '€3,000 – €5,000', detail: 'Rapid Sprint / Landing Page' },
-                      { tier: '€5,000 – €10,000', detail: 'Flagship Multi-Page Site' },
-                      { tier: '€10,000 – €20,000', detail: 'Custom E-Commerce / Web App' },
-                      { tier: '€20,000+', detail: 'Enterprise Spatial Architecture' }
-                    ].map((item, idx) => (
+                      { id: 'Express (2-3 weeks)', label: 'Ekspres (2 – 3 Javë)', badge: 'Prioritet i Lartë' },
+                      { id: 'Standard (4-6 weeks)', label: 'Standard (4 – 6 Javë)', badge: 'E Rekomanduar' },
+                      { id: 'Comprehensive (6-10 weeks)', label: 'I Plotë (6 – 10 Javë)', badge: 'Për Projekte Komplekse' }
+                    ].map((time) => (
                       <button
-                        key={idx}
-                        onClick={() => setBudgetTier(item.tier)}
-                        className={`text-left p-3.5 rounded-xl border text-xs transition-all cursor-pointer ${
-                          budgetTier === item.tier
-                            ? 'bg-[#221816] border-[#dd6b4d] shadow-[0_0_16px_rgba(221,107,77,0.2)] text-[#fbf8f5]'
-                            : 'bg-[#0b0b0b]/60 border-white/[0.08] text-[#b3a8a2] hover:border-white/20'
+                        key={time.id}
+                        type="button"
+                        onClick={() => setTargetTimeline(time.id)}
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                          targetTimeline === time.id
+                            ? 'bg-[#221816] border-[#dd6b4d] text-[#fbf8f5]'
+                            : 'bg-[#0b0b0b] border-white/[0.08] text-[#b3a8a2]'
                         }`}
                       >
-                        <span className="font-mono-tabular text-sm font-bold block text-[#fbf8f5] mb-0.5">
-                          {item.tier}
-                        </span>
-                        <span className="text-[11px] text-[#b3a8a2]">{item.detail}</span>
+                        <span className="block text-xs font-bold text-[#fbf8f5] mb-1">{time.label}</span>
+                        <span className="text-[10px] text-[#ff9d82] font-mono-tabular">{time.badge}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <span className="block text-xs font-mono-tabular uppercase text-[#b3a8a2] mb-2.5">
-                    Desired Delivery Window:
-                  </span>
-                  <div className="grid grid-cols-3 gap-2">
-                    {['Urgent (2-4 wks)', 'Within 4-8 weeks', 'Flexible Planning'].map((time, idx) => (
+                  <label className="block text-xs font-mono-tabular uppercase tracking-wider text-[#b3a8a2] mb-2">
+                    Përzgjidhni diapazonin e buxhetit:
+                  </label>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {[
+                      { id: '€2,500 – €5,000', label: '€2,500 – €5,000', note: 'Startups & Redizajn Celulari' },
+                      { id: '€5,000 – €10,000', label: '€5,000 – €10,000', note: 'E-Commerce & Dyqane Headless' },
+                      { id: '€10,000 – €20,000', label: '€10,000 – €20,000', note: 'Aplikacione Uebi & Sisteme të Përshtatura' },
+                      { id: '€20,000+', label: '€20,000+', note: 'Zgjidhje Ndërmarrjesh (Enterprise)' }
+                    ].map((b) => (
                       <button
-                        key={idx}
-                        onClick={() => setTargetTimeline(time)}
-                        className={`py-2.5 px-2 rounded-lg border text-center text-xs font-medium cursor-pointer transition-all ${
-                          targetTimeline === time
-                            ? 'bg-[#dd6b4d] text-white border-[#dd6b4d] font-bold'
-                            : 'bg-[#0b0b0b]/60 border-white/[0.08] text-[#b3a8a2] hover:border-white/20'
+                        key={b.id}
+                        type="button"
+                        onClick={() => setBudgetTier(b.id)}
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                          budgetTier === b.id
+                            ? 'bg-[#221816] border-[#dd6b4d] text-[#fbf8f5]'
+                            : 'bg-[#0b0b0b] border-white/[0.08] text-[#b3a8a2]'
                         }`}
                       >
-                        {time}
+                        <span className="block font-mono-tabular text-sm font-bold text-[#fbf8f5]">{b.label}</span>
+                        <span className="text-[11px] text-[#b3a8a2]">{b.note}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Preset calculator summary if launched from calculator */}
-                {presetQuoteData && (
-                  <div className="p-3.5 rounded-xl bg-[#0b0b0b] border border-white/[0.08] text-xs">
-                    <span className="text-[10px] uppercase font-mono-tabular text-[#dd6b4d] font-bold block mb-1">
-                      Attached Calculator Estimate:
-                    </span>
-                    <div className="flex justify-between text-[#b3a8a2]">
-                      <span>Scope: {presetQuoteData.projectTypeLabel}</span>
-                      <span className="font-mono-tabular text-[#fbf8f5] font-bold">{presetQuoteData.investmentRange}</span>
-                    </div>
-                  </div>
-                )}
-
                 <div className="flex justify-between pt-4 border-t border-white/[0.08]">
                   <button
+                    type="button"
                     onClick={() => setCurrentStep(1)}
-                    className="btn-secondary-dark px-4 py-2 text-xs rounded-lg flex items-center gap-1.5 cursor-pointer font-semibold"
+                    className="btn-secondary-dark px-4 py-2 text-xs rounded-xl flex items-center gap-1.5 cursor-pointer font-semibold"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Back</span>
+                    <span>Kthehu</span>
                   </button>
                   <button
+                    type="button"
                     onClick={handleNextStep}
-                    className="btn-primary-orange px-6 py-2.5 text-xs rounded-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer font-bold"
+                    className="btn-primary-orange px-6 py-2.5 text-xs rounded-xl uppercase tracking-wider flex items-center gap-2 cursor-pointer font-bold shadow-md"
                   >
-                    <span>NEXT STEP</span>
+                    <span>Vazhdo te Detajet</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Step 3: Contact & Delivery */}
+            {/* Step 3: Contact & Direct Dispatch */}
             {currentStep === 3 && (
               <form onSubmit={handleFinalSubmit} className="space-y-4 animate-in fade-in duration-200">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
                     <label className="block text-xs font-mono-tabular uppercase text-[#b3a8a2] mb-1">
-                      Your Full Name *
+                      Emri dhe Mbiemri *
                     </label>
                     <input
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      placeholder="e.g. Sarah Jenkins"
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d]"
+                      placeholder="p.sh. Alban Morina"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d]"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-mono-tabular uppercase text-[#b3a8a2] mb-1">
-                      Work Email *
+                      Email Zyrtar i Punës *
                     </label>
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. sarah@company.com"
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d]"
+                      placeholder="p.sh. alban@biznesi.com"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d]"
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-mono-tabular uppercase text-[#b3a8a2] mb-1">
-                    Company Name or Existing Website URL
+                    Emri i Kompanisë ose Uebfaqja Aktuale
                   </label>
                   <input
                     type="text"
                     value={companyOrUrl}
                     onChange={(e) => setCompanyOrUrl(e.target.value)}
-                    placeholder="e.g. Acme Studio or https://acme.com"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d]"
+                    placeholder="p.sh. Morina Atelier ose https://morina.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d]"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-mono-tabular uppercase text-[#b3a8a2] mb-1">
-                    Specific Feature Requests or Notes (Optional)
+                    Kërkesa të Veçanta apo Shënime (Opsionale)
                   </label>
                   <textarea
                     rows={2}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="e.g. Need 3D product view, Stripe payment processing, and bilingual English/German support..."
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d] resize-none"
+                    placeholder="p.sh. Kërkojmë pamje 3D për produkte, pagesa me Stripe dhe Apple Pay..."
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d] resize-none"
                   />
                 </div>
 
@@ -293,79 +333,204 @@ export const FreeDemoModal: React.FC<FreeDemoModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setCurrentStep(2)}
-                    className="btn-secondary-dark px-4 py-2 text-xs rounded-lg flex items-center gap-1.5 cursor-pointer font-semibold"
+                    className="btn-secondary-dark px-4 py-2 text-xs rounded-xl flex items-center gap-1.5 cursor-pointer font-semibold"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Back</span>
+                    <span>Kthehu</span>
                   </button>
                   <button
                     type="submit"
-                    className="btn-primary-orange px-6 py-2.5 text-xs rounded-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer font-bold"
+                    className="btn-primary-orange btn-glow-hover px-6 py-2.5 text-xs rounded-xl uppercase tracking-wider flex items-center gap-2 cursor-pointer font-bold shadow-lg"
                   >
                     <Send className="w-4 h-4" />
-                    <span>SUBMIT DEMO REQUEST</span>
+                    <span>GJENERO VAUÇERIN & REZERVO</span>
                   </button>
                 </div>
               </form>
             )}
           </div>
         ) : (
-          /* Confirmation State View */
-          <div className="text-center py-6 space-y-6 animate-in fade-in duration-200">
-            <div className="w-14 h-14 rounded-full bg-[#dd6b4d]/20 border border-[#dd6b4d] flex items-center justify-center mx-auto text-[#dd6b4d] shadow-[0_0_24px_rgba(221,107,77,0.3)]">
-              <CheckCircle2 className="w-7 h-7" />
+          /* ============================================================ */
+          /* LUXURY OFFICIAL 1-PAGE DEMO VOUCHER / SLIP (OBSIDIAN DARK)   */
+          /* ============================================================ */
+          <div className="py-2 text-[#fbf8f5] animate-in fade-in duration-200">
+            {/* The Official Certificate / Voucher Card */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-b from-[#1c1412] via-[#140e0d] to-[#0d0908] border border-[#dd6b4d]/40 shadow-2xl relative overflow-hidden">
+              {/* Top Luxury Catch-Light Beam */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#dd6b4d] to-transparent" />
+
+              {/* Watermark / Background Texture Accents */}
+              <div className="absolute -right-12 -bottom-12 w-48 h-48 rounded-full bg-[#dd6b4d]/5 blur-3xl pointer-events-none" />
+
+              {/* Voucher Header Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-5 border-b border-white/10 gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#dd6b4d]/15 border border-[#dd6b4d]/40 flex items-center justify-center text-[#dd6b4d] font-bold font-display text-lg shadow-inner">
+                    S
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-display font-extrabold tracking-tight text-lg sm:text-xl text-[#fbf8f5]">
+                        STARWEBS.KS
+                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d]" />
+                    </div>
+                    <span className="text-[10px] uppercase font-mono-tabular tracking-widest text-[#ff9d82] block font-semibold">
+                      Digital Flagship Engineering Studio
+                    </span>
+                  </div>
+                </div>
+
+                {/* Voucher Registration Number */}
+                <div className="text-left sm:text-right font-mono-tabular">
+                  <span className="text-[9px] uppercase tracking-wider text-[#b3a8a2] block">
+                    Official Voucher Serial
+                  </span>
+                  <span className="text-sm sm:text-base font-extrabold text-[#dd6b4d] tracking-wider block">
+                    {demoRef}
+                  </span>
+                  <span className="text-[10px] text-[#b3a8a2]">
+                    Issued: {issuedDate}
+                  </span>
+                </div>
+              </div>
+
+              {/* Status Ribbon Strip */}
+              <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 px-4 rounded-xl bg-[#0b0b0b]/90 border border-white/[0.08] text-xs font-mono-tabular mb-5">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-bold text-emerald-400 uppercase tracking-wider">
+                    Status: Reserved & Engineering Scheduled
+                  </span>
+                </div>
+                <div className="text-[#ff9d82] font-semibold text-[11px]">
+                  SLA: Sub-4h Dedicated Solutions Architect Review
+                </div>
+              </div>
+
+              {/* Client & Architecture Specification Matrix */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 text-xs font-mono-tabular">
+                {/* Client Profile Box */}
+                <div className="p-4 rounded-xl bg-[#0b0b0b]/70 border border-white/[0.08] space-y-2">
+                  <span className="text-[10px] uppercase tracking-wider text-[#ff9d82] font-bold block border-b border-white/[0.06] pb-1">
+                    Klienti & Përfaqësuesi Zyrtar
+                  </span>
+                  <div className="flex justify-between">
+                    <span className="text-[#b3a8a2]">Emri i Plotë:</span>
+                    <span className="font-bold text-[#fbf8f5]">{fullName || 'Përfaqësues i Autorizuar'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#b3a8a2]">Biznesi / URL:</span>
+                    <span className="font-semibold text-[#fbf8f5] truncate max-w-[160px]">{companyOrUrl || 'Biznes Konfidencial'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#b3a8a2]">Email Zyrtar:</span>
+                    <span className="text-[#ff9d82] truncate max-w-[160px]">{email}</span>
+                  </div>
+                </div>
+
+                {/* Project Architecture Box */}
+                <div className="p-4 rounded-xl bg-[#0b0b0b]/70 border border-white/[0.08] space-y-2">
+                  <span className="text-[10px] uppercase tracking-wider text-[#ff9d82] font-bold block border-b border-white/[0.06] pb-1">
+                    Specifikimet e Arkitekturës
+                  </span>
+                  <div className="flex justify-between">
+                    <span className="text-[#b3a8a2]">Objektivi:</span>
+                    <span className="font-bold text-[#fbf8f5] truncate max-w-[160px]">{selectedObjective}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#b3a8a2]">Diapazoni i Buxhetit:</span>
+                    <span className="font-bold text-emerald-400">{budgetTier}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#b3a8a2]">Pritshmëria e Kohës:</span>
+                    <span className="text-[#fbf8f5]">{targetTimeline}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Guarantees & Deliverables Strip */}
+              <div className="p-3.5 rounded-xl bg-[#171211] border border-white/[0.08] mb-5 text-[11px] font-mono-tabular">
+                <span className="text-[10px] uppercase text-[#b3a8a2] block mb-1.5 font-bold">
+                  Paketa e Përfshirë në Konsultimin & Demon Falas:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[#fbf8f5]">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#dd6b4d] shrink-0" />
+                    <span>Auditimi i Shpejtësisë (100 Core Vitals)</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#dd6b4d] shrink-0" />
+                    <span>Prototip Interaktiv Sandbox</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#dd6b4d] shrink-0" />
+                    <span>Preventiv me Çmim Fiks & Pa Kosto të Fshehura</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Official Security Stamp & Authenticity Seal Block */}
+              <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                {/* SVG Official Verification Seal */}
+                <div className="flex items-center gap-3">
+                  <div className="relative w-14 h-14 rounded-full border-2 border-dashed border-[#dd6b4d] p-1 flex items-center justify-center bg-[#0b0b0b] shadow-[0_0_15px_rgba(221,107,77,0.3)]">
+                    <div className="w-full h-full rounded-full border border-[#dd6b4d]/60 flex flex-col items-center justify-center text-center">
+                      <Award className="w-4 h-4 text-[#dd6b4d]" />
+                      <span className="text-[7px] font-mono-tabular font-extrabold text-[#ff9d82] uppercase leading-none mt-0.5">
+                        VERIFIED
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="font-display text-xs font-bold text-[#fbf8f5] block">
+                      Vula Zyrtare e Sigurisë · starwebs.ks
+                    </span>
+                    <span className="text-[10px] font-mono-tabular text-[#b3a8a2] block">
+                      Digital Authentication Hash: SHA256-SW-{Math.random().toString(36).substring(2, 10).toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Direct Executive Contact Info */}
+                <div className="text-left sm:text-right text-[11px] font-mono-tabular text-[#b3a8a2]">
+                  <span className="block text-[#fbf8f5] font-semibold">
+                    Kanal i Drejtpërdrejtë me Inxhinierin:
+                  </span>
+                  <span className="text-emerald-400 font-bold block">
+                    WhatsApp: +383 48 881 191
+                  </span>
+                  <span>Prishtinë, Kosovë · studio@starwebs.ks</span>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <span className="font-mono-tabular text-xs font-bold text-[#dd6b4d] block mb-1">
-                DEMO SLIP GENERATED · REF: {demoRef}
-              </span>
-              <h3 className="font-display text-2xl font-bold text-[#fbf8f5] mb-2">
-                Your Free Demo Session is Reserved
-              </h3>
-              <p className="text-xs text-[#b3a8a2] max-w-md mx-auto leading-relaxed">
-                Thank you <strong className="text-[#fbf8f5]">{fullName}</strong>. We have prioritized your demo request for <strong className="text-[#fbf8f5]">{selectedObjective}</strong>. Our senior engineer is preparing an interactive sandbox preview for <strong className="text-[#fbf8f5]">{email}</strong>.
-              </p>
-            </div>
-
-            {/* Spec Receipt */}
-            <div className="p-4 rounded-xl bg-[#0b0b0b] border border-white/[0.08] text-left font-mono-tabular text-xs space-y-2 max-w-md mx-auto">
-              <div className="flex justify-between border-b border-white/[0.08] pb-1.5 text-[11px] text-[#b3a8a2]">
-                <span>STARWEBS.KS DEMO VOUCHER</span>
-                <span className="text-[#dd6b4d] font-bold">{demoRef}</span>
-              </div>
-              <div className="flex justify-between text-[#b3a8a2]">
-                <span>Target Project:</span>
-                <span className="text-[#fbf8f5] font-semibold">{selectedObjective}</span>
-              </div>
-              <div className="flex justify-between text-[#b3a8a2]">
-                <span>Budget Tier:</span>
-                <span className="text-[#ff9d82]">{budgetTier}</span>
-              </div>
-              <div className="flex justify-between text-[#b3a8a2]">
-                <span>SLA Response:</span>
-                <span className="text-emerald-400 font-bold">&lt; 4 Hours Guarantee</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-3 pt-2">
+            {/* Action Buttons (Strictly Hidden When Printing) */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-6 print:hidden">
               <button
                 onClick={() => window.print()}
-                className="btn-secondary-dark px-4 py-2 text-xs rounded-lg flex items-center gap-2 cursor-pointer font-semibold"
+                className="btn-primary-orange btn-glow-hover px-6 py-2.5 text-xs rounded-xl flex items-center gap-2 cursor-pointer font-bold shadow-xl"
               >
-                <Printer className="w-3.5 h-3.5" />
-                <span>Print Demo Slip</span>
+                <Printer className="w-4 h-4" />
+                <span>PRINT DEMO SLIP (PDF / FLETË A4)</span>
               </button>
 
-              <button
-                onClick={() => {
-                  setIsCompleted(false);
-                  setCurrentStep(1);
-                  onClose();
-                }}
-                className="btn-primary-orange px-6 py-2 text-xs rounded-lg uppercase tracking-wider font-bold cursor-pointer"
+              <a
+                href="https://wa.me/38348881191"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary-dark px-4 py-2.5 text-xs rounded-xl flex items-center gap-2 cursor-pointer font-semibold"
               >
-                Close Window
+                <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Dërgo në WhatsApp</span>
+              </a>
+
+              <button
+                onClick={handleResetAndClose}
+                className="px-4 py-2.5 text-xs rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-[#b3a8a2] hover:text-[#fbf8f5] transition-colors cursor-pointer"
+              >
+                Mbyll Dritaren
               </button>
             </div>
           </div>
