@@ -1,0 +1,8 @@
+{
+  "name": "starwebs.ks",
+  "description": "Architectural structural glass engineering studio and interactive spatial systems platform with atmospheric dark glassmorphism.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
