@@ -6,6 +6,7 @@ import { ServicesSection } from './components/ServicesSection';
 import { PortfolioShowcase } from './components/PortfolioShowcase';
 import { TechStackGrid } from './components/TechStackGrid';
 import { CaseStudiesSection } from './components/CaseStudiesSection';
+import { TrustVerificationSection } from './components/TrustVerificationSection';
 import { ContactSection } from './components/ContactSection';
 import { FreeDemoModal } from './components/FreeDemoModal';
 import { LiveDemoModal } from './components/LiveDemoModal';
@@ -84,7 +85,10 @@ export default function App() {
           onOpenFreeDemo={handleOpenFreeDemoDefault}
         />
 
-        {/* 8. Contact / Commission Section with Prominent WhatsApp Card (+383 48 881 191) & Instagram */}
+        {/* 8. Official Trust & Kosovo Verification Section (ARBK & Superpuna) */}
+        <TrustVerificationSection />
+
+        {/* 9. Contact / Commission Section with Prominent WhatsApp Card (+383 48 881 191) & Instagram */}
         <ContactSection />
       </main>
 

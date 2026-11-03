@@ -91,6 +91,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
             </li>
             <li>
               <button
+                onClick={() => onNavigate('trust')}
+                className="hover:text-[#fbf8f5] transition-colors cursor-pointer text-left text-[#ff9d82]"
+              >
+                Besueshmëria & ARBK
+              </button>
+            </li>
+            <li>
+              <button
                 onClick={() => onNavigate('contact')}
                 className="hover:text-[#fbf8f5] transition-colors cursor-pointer text-left"
               >
@@ -112,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
           <div className="flex flex-col gap-2.5">
             <button
               onClick={onOpenFreeDemo}
-              className="btn-primary-orange w-full py-3 text-xs rounded-lg uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer font-bold shadow-lg"
+              className="btn-primary-orange btn-glow-hover w-full py-3 text-xs rounded-xl uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer font-bold shadow-lg"
             >
               <span>GET A FREE DEMO</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -122,7 +130,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
               href="https://wa.me/38348881191"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2.5 rounded-lg bg-[#171211] border border-emerald-500/30 text-emerald-300 hover:bg-[#1f1715] hover:border-emerald-500/60 transition-colors text-xs font-semibold flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl bg-[#171211] border border-emerald-500/30 text-emerald-300 hover:bg-[#1f1715] hover:border-emerald-500/60 transition-colors text-xs font-semibold flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
               <span>Contact Us: +383 48 881 191</span>
@@ -131,13 +139,43 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
         </div>
       </div>
 
+      {/* Official Kosovo Enterprise Trust Bar (ARBK & Superpuna) */}
+      <div className="max-w-[1440px] mx-auto mb-8 p-4 rounded-2xl bg-neutral-900/40 border border-white/10 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-tabular">
+        <div className="flex items-center gap-2.5 text-[#fbf8f5]">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-semibold">Biznes i Regjistruar në ARBK</span>
+          <span className="text-white/20 hidden sm:inline">·</span>
+          <span className="text-[#b3a8a2] hidden sm:inline">Republika e Kosovës</span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-[#b3a8a2]">Punësimi i Rinisë:</span>
+          <a
+            href="https://superpuna.rks-gov.net/job-seeker/employer/starwebs-ks"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#dd6b4d]/20 border border-[#dd6b4d]/40 text-[#ff9d82] hover:bg-[#dd6b4d] hover:text-white transition-all font-semibold"
+          >
+            <span>Profili në Superpuna</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      </div>
+
       {/* Legal & Standards */}
       <div className="max-w-[1440px] mx-auto pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#b3a8a2] gap-4 font-mono-tabular">
         <p>© {new Date().getFullYear()} starwebs.ks Digital Engineering Agency. All rights reserved.</p>
-        <div className="flex items-center gap-4">
-          <span>React 19 & Next.js Stacks</span>
+        <div className="flex flex-wrap items-center gap-3">
+          <span>Biznes i Regjistruar në ARBK</span>
           <span>·</span>
-          <span>WCAG 2.1 AA Compliant</span>
+          <a 
+            href="https://superpuna.rks-gov.net/job-seeker/employer/starwebs-ks" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-[#ff9d82] hover:underline"
+          >
+            Profili në Superpuna
+          </a>
           <span>·</span>
           <span>WhatsApp: +383 48 881 191</span>
         </div>
