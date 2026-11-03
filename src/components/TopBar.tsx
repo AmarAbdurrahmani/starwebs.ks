@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, MessageCircle, Instagram, Menu, X, ShieldCheck } from 'lucide-react';
+import { ArrowRight, MessageCircle, Instagram, Linkedin, Menu, X, ShieldCheck } from 'lucide-react';
 
 interface TopBarProps {
   activeSection: string;
@@ -103,6 +103,18 @@ export const TopBar: React.FC<TopBarProps> = ({
             <span className="font-mono-tabular">+383 48 881 191</span>
           </a>
 
+          {/* Desktop LinkedIn Profile Link */}
+          <a
+            href="https://www.linkedin.com/company/starwebs-ks/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[#b3a8a2] hover:text-[#70b5f9] hover:border-[#0a66c2]/50 transition-colors"
+            title="STARWEBS.KS LinkedIn"
+            aria-label="STARWEBS.KS LinkedIn"
+          >
+            <Linkedin className="w-3.5 h-3.5" />
+          </a>
+
           {/* Desktop/Tablet Demo Button */}
           <button
             onClick={onOpenFreeDemo}
@@ -174,6 +186,16 @@ export const TopBar: React.FC<TopBarProps> = ({
             >
               <Instagram className="w-4 h-4 text-[#dd6b4d]" />
               <span>Instagram: @starwebs.ks</span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/starwebs-ks/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-[#fbf8f5] text-xs font-semibold hover:border-[#0a66c2]/40 hover:text-[#70b5f9] transition-colors"
+            >
+              <Linkedin className="w-4 h-4 text-[#0a66c2]" />
+              <span>LinkedIn: starwebs-ks</span>
             </a>
 
             <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#b3a8a2]/70 pt-1">

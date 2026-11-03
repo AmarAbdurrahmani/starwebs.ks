@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle2, Mail, MessageCircle, Clock, ShieldCheck, Sparkles, Instagram, PhoneCall } from 'lucide-react';
+import { Send, CheckCircle2, Mail, MessageCircle, Clock, ShieldCheck, Sparkles, Instagram, Linkedin, PhoneCall } from 'lucide-react';
 
 export const ContactSection: React.FC = () => {
   const [clientName, setClientName] = useState('');
@@ -106,6 +106,31 @@ export const ContactSection: React.FC = () => {
               className="px-3.5 py-1.5 rounded-lg bg-white/[0.06] text-xs font-semibold text-[#ff9d82] hover:bg-[#dd6b4d] hover:text-white transition-colors"
             >
               @starwebs.ks
+            </a>
+          </div>
+
+          {/* Official LinkedIn Link Card */}
+          <div className="p-4 rounded-xl card-chocolate border border-white/[0.08] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-[#0c1825] border border-[#0a66c2]/30 flex items-center justify-center text-[#0a66c2]">
+                <Linkedin className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="font-display text-sm font-bold text-[#fbf8f5] block">
+                  Official LinkedIn
+                </span>
+                <span className="text-xs text-[#b3a8a2]">
+                  Corporate news & engineering network
+                </span>
+              </div>
+            </div>
+            <a
+              href="https://www.linkedin.com/company/starwebs-ks/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-1.5 rounded-lg bg-[#0a66c2]/10 border border-[#0a66c2]/20 text-xs font-semibold text-[#70b5f9] hover:bg-[#0a66c2] hover:text-white transition-colors"
+            >
+              starwebs-ks
             </a>
           </div>
 

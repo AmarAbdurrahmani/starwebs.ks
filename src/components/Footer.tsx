@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, MessageCircle, Instagram, Mail, PhoneCall } from 'lucide-react';
+import { ArrowUpRight, MessageCircle, Instagram, Linkedin, Mail, PhoneCall } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (sectionId: string) => void;
@@ -54,6 +54,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
             >
               <Instagram className="w-3.5 h-3.5 text-[#dd6b4d]" />
               <span>Instagram: @starwebs.ks</span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/starwebs-ks/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[#fbf8f5] hover:border-[#0a66c2]/50 hover:text-[#70b5f9] transition-colors text-xs font-semibold group"
+              title="STARWEBS.KS LinkedIn Company Profile"
+            >
+              <Linkedin className="w-3.5 h-3.5 text-[#0a66c2] group-hover:scale-110 transition-transform" />
+              <span>LinkedIn: starwebs-ks</span>
             </a>
           </div>
         </div>
