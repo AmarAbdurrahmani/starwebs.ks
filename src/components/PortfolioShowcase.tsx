@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PORTFOLIO_PROJECTS } from '../data/agencyData';
 import { PortfolioProject } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,7 +13,10 @@ import {
   Layers, 
   Zap,
   TrendingUp,
-  ExternalLink
+  ExternalLink,
+  ZoomIn,
+  X,
+  Maximize2
 } from 'lucide-react';
 
 interface PortfolioShowcaseProps {
@@ -25,9 +28,24 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
   onOpenFreeDemoForProject,
   onViewLiveDemo
 }) => {
+  const [portfolioViewMode, setPortfolioViewMode] = useState<'gallery' | 'simulator'>('gallery');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeProjectId, setActiveProjectId] = useState<string>(PORTFOLIO_PROJECTS[0].id);
   const [deviceMode, setDeviceMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [selectedZoomProject, setSelectedZoomProject] = useState<PortfolioProject | null>(null);
+  const [isMagnified, setIsMagnified] = useState<boolean>(false);
+
+  // Close high-res modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedZoomProject) {
+        setSelectedZoomProject(null);
+        setIsMagnified(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedZoomProject]);
 
   const categories = ['All', 'E-Commerce', 'Product Showcase', 'Tech & Innovation'];
 
@@ -62,7 +80,7 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
   };
 
   return (
-    <section id="portfolio" className="relative py-24 px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08]">
+    <section id="portfolio" className="relative py-20 sm:py-28 lg:py-36 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08]">
       {/* Ambient localized glow */}
       <div 
         className="absolute top-1/3 right-1/4 w-[600px] h-[350px] rounded-full pointer-events-none opacity-20 blur-[130px]"
@@ -77,7 +95,7 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6"
+        className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-16 gap-6"
       >
         <div>
           <div className="inline-flex items-center gap-2 mb-3 text-xs text-[#b3a8a2]">
@@ -86,43 +104,80 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
               Portofoli i Zgjedhur · Client Showcase
             </span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#fbf8f5]">
+          <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#fbf8f5]">
             Rich Interactive Digital Flagships
           </h2>
-          <p className="font-body text-sm text-[#b3a8a2] mt-2 max-w-xl leading-relaxed">
+          <p className="font-body text-xs sm:text-sm text-[#b3a8a2] mt-2 max-w-xl leading-relaxed">
             Eksploroni projektet tona të ndërtuara me arkitekturë moderne, performancë maksimale dhe përvojë përdoruesi në celular dhe desktop.
           </p>
         </div>
 
-        {/* Category Tabs with Glassmorphism and Zero-Pill Button Discipline */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-neutral-900/40 backdrop-blur-md border border-white/10 rounded-xl self-start md:self-auto">
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
-                  isSelected
-                    ? 'bg-[#dd6b4d] text-white shadow-[0_0_18px_rgba(221,107,77,0.45)]'
-                    : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.04]'
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
+        {/* View Mode & Filter Controls (Anti-Clutter Layout) */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          {/* Main View Mode Tabs */}
+          <div className="flex items-center gap-1.5 p-1.5 bg-neutral-900/60 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg">
+            <button
+              onClick={() => setPortfolioViewMode('gallery')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+                portfolioViewMode === 'gallery'
+                  ? 'bg-[#dd6b4d] text-white shadow-[0_0_16px_rgba(221,107,77,0.4)]'
+                  : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/5'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Galeria</span>
+            </button>
+
+            <button
+              onClick={() => setPortfolioViewMode('simulator')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+                portfolioViewMode === 'simulator'
+                  ? 'bg-[#dd6b4d] text-white shadow-[0_0_16px_rgba(221,107,77,0.4)]'
+                  : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/5'
+              }`}
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              <span>Simulatori i Pajisjeve</span>
+            </button>
+          </div>
+
+          {/* Category Tabs when in Gallery mode */}
+          {portfolioViewMode === 'gallery' && (
+            <div className="flex flex-wrap items-center gap-1 p-1 bg-black/50 backdrop-blur-md border border-white/10 rounded-xl">
+              {categories.map((cat) => {
+                const isSelected = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 text-[11px] font-semibold rounded-lg transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-white/15 text-[#fbf8f5]'
+                        : 'text-[#b3a8a2] hover:text-[#fbf8f5]'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       </motion.div>
 
-      {/* Rich Bento Grid Layout */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-40px' }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 mb-16"
-      >
+      {/* Main Portfolio Content Switcher */}
+      <AnimatePresence mode="wait">
+        {portfolioViewMode === 'gallery' ? (
+          <>
+            {/* Rich Bento Grid Layout */}
+            <motion.div
+              key="portfolio-gallery-grid"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit={{ opacity: 0, y: -16 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 sm:gap-6 mb-10"
+            >
         {/* Project 1: A&A Streetwear Store (Featured Marquee Bento Card - col-span-8 or col-span-7) */}
         {filteredProjects.find(p => p.id === 'aa-streetwear') && (() => {
           const project = filteredProjects.find(p => p.id === 'aa-streetwear')!;
@@ -138,8 +193,15 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
                   : 'bg-neutral-900/40 backdrop-blur-md border border-white/10 hover:border-[#dd6b4d]/50 hover:bg-neutral-900/60 hover:shadow-[0_16px_40px_rgba(0,0,0,0.8)]'
               }`}
             >
-              {/* Image Container with Zoom-on-Hover */}
-              <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-black/80 border-b border-white/10">
+              {/* Image Container with Zoom-on-Hover and Ultra-HD Preview */}
+              <div 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedZoomProject(project);
+                  setIsMagnified(false);
+                }}
+                className="relative aspect-[16/9] w-full overflow-hidden bg-black/80 border-b border-white/10 cursor-zoom-in"
+              >
                 <img
                   src={project.imageUrl || '/assets/aistudio/image_8ecb0193.png'}
                   alt={project.title}
@@ -148,7 +210,7 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
                 />
                 
                 {/* Visual Glass Overlay Badge */}
-                <div className="absolute top-4 left-4 flex items-center gap-2">
+                <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
                   <span className="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[11px] font-mono-tabular font-bold text-[#ff9d82]">
                     {project.category} · {project.year}
                   </span>
@@ -157,7 +219,18 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
                   </span>
                 </div>
 
-                <div className="absolute top-4 right-4">
+                <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedZoomProject(project);
+                      setIsMagnified(false);
+                    }}
+                    className="p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:text-[#ff9d82] hover:bg-black/90 hover:border-[#dd6b4d]/50 transition-all cursor-pointer flex items-center justify-center shadow-md"
+                    title="Zmadho imazhin në Ultra-HD"
+                  >
+                    <ZoomIn className="w-3.5 h-3.5" />
+                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -168,6 +241,14 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
                   </button>
+                </div>
+
+                {/* Subtle Hover Zoom Callout */}
+                <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                  <span className="px-3.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-xs font-semibold text-white flex items-center gap-1.5 shadow-2xl transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                    <ZoomIn className="w-3.5 h-3.5 text-[#ff9d82]" />
+                    <span>Kliko për Ultra-HD</span>
+                  </span>
                 </div>
               </div>
 
@@ -238,22 +319,43 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
                   : 'bg-neutral-900/40 backdrop-blur-md border border-white/10 hover:border-[#dd6b4d]/50 hover:bg-neutral-900/60 hover:shadow-[0_16px_40px_rgba(0,0,0,0.8)]'
               }`}
             >
-              {/* Image Container with Zoom */}
-              <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-black/80 border-b border-white/10">
+              {/* Image Container with Zoom and Ultra-HD Preview */}
+              <div 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedZoomProject(project);
+                  setIsMagnified(false);
+                }}
+                className="relative aspect-[16/9] w-full overflow-hidden bg-black/80 border-b border-white/10 cursor-zoom-in"
+              >
                 <img
-                  src={project.imageUrl || '/assets/aistudio/image_8989395a.png'}
+                  src={project.imageUrl || '/assets/aistudio/Gemini_Generated_Image_jpv2qcjpv2qcjpv2_ef0a29e4.jpg'}
                   alt={project.title}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-top transform transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-105"
                 />
 
-                <div className="absolute top-4 left-4 flex items-center gap-2">
+                <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
                   <span className="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[11px] font-mono-tabular font-bold text-[#ff9d82]">
                     {project.category}
                   </span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#dd6b4d]/25 border border-[#dd6b4d]/40 text-[10px] font-mono-tabular text-[#ff9d82] font-bold">
+                    Ultra-HD
+                  </span>
                 </div>
 
-                <div className="absolute top-4 right-4">
+                <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedZoomProject(project);
+                      setIsMagnified(false);
+                    }}
+                    className="p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:text-[#ff9d82] hover:bg-black/90 hover:border-[#dd6b4d]/50 transition-all cursor-pointer flex items-center justify-center shadow-md"
+                    title="Zmadho imazhin në Ultra-HD"
+                  >
+                    <ZoomIn className="w-3.5 h-3.5" />
+                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -264,6 +366,14 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
                   </button>
+                </div>
+
+                {/* Subtle Hover Zoom Callout */}
+                <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                  <span className="px-3.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-xs font-semibold text-white flex items-center gap-1.5 shadow-2xl transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                    <ZoomIn className="w-3.5 h-3.5 text-[#ff9d82]" />
+                    <span>Kliko për Ultra-HD</span>
+                  </span>
                 </div>
               </div>
 
@@ -310,7 +420,7 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
           );
         })()}
 
-        {/* Project 3: VisionWarp VR Experience (col-span-12 or col-span-6) */}
+        {/* Project 3: VisionWarp VR Experience (col-span-12) */}
         {filteredProjects.find(p => p.id === 'visionwarp-vr') && (() => {
           const project = filteredProjects.find(p => p.id === 'visionwarp-vr')!;
           const isSelected = activeProject.id === project.id;
@@ -327,16 +437,48 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
                 {/* Image Section */}
-                <div className="lg:col-span-6 relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto lg:h-[340px] w-full overflow-hidden bg-black/90 border-b lg:border-b-0 lg:border-r border-white/10">
+                <div 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedZoomProject(project);
+                    setIsMagnified(false);
+                  }}
+                  className="lg:col-span-6 relative aspect-[16/9] lg:h-[350px] w-full overflow-hidden bg-black/90 border-b lg:border-b-0 lg:border-r border-white/10 cursor-zoom-in"
+                >
                   <img
-                    src={project.imageUrl || '/assets/aistudio/image_cf5b4fb1.png'}
+                    src={project.imageUrl || '/assets/aistudio/Gemini_Generated_Image_jpv2qcjpv2qcjpv2__1__b1afee03.jpg'}
                     alt={project.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-top transform transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute top-4 left-4 flex items-center gap-2">
+                  <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
                     <span className="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[11px] font-mono-tabular font-bold text-[#ff9d82]">
                       {project.category} · 3D Spatial
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-[10px] font-mono-tabular text-cyan-400 font-bold">
+                      Ultra-HD
+                    </span>
+                  </div>
+
+                  <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedZoomProject(project);
+                        setIsMagnified(false);
+                      }}
+                      className="p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:text-[#ff9d82] hover:bg-black/90 hover:border-[#dd6b4d]/50 transition-all cursor-pointer flex items-center justify-center shadow-md"
+                      title="Zmadho imazhin në Ultra-HD"
+                    >
+                      <ZoomIn className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Subtle Hover Zoom Callout */}
+                  <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                    <span className="px-3.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-xs font-semibold text-white flex items-center gap-1.5 shadow-2xl transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                      <ZoomIn className="w-3.5 h-3.5 text-[#ff9d82]" />
+                      <span>Kliko për Ultra-HD</span>
                     </span>
                   </div>
                 </div>
@@ -396,19 +538,45 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
         })()}
       </motion.div>
 
-      {/* Confirmed Interactive Device Viewport Simulation Station (Desktop vs Mobile) */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="rounded-3xl bg-neutral-900/40 backdrop-blur-md border border-white/10 p-6 sm:p-10 relative shadow-2xl overflow-hidden"
-      >
-        {/* Ambient Top Light Beam */}
-        <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-[#dd6b4d]/60 to-transparent" />
+          {/* Bottom clean prompt to launch device simulator (Zero-clutter progressive disclosure) */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-neutral-900/40 backdrop-blur-md border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center text-[#dd6b4d] shrink-0">
+                <Monitor className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-display text-sm sm:text-base font-bold text-[#fbf8f5]">
+                  Dëshironi të testoni responsivitetin në kohë reale?
+                </h4>
+                <p className="text-xs text-[#b3a8a2] leading-relaxed">
+                  Eksploroni pamjet interaktive Desktop dhe Mobile me shfletues të simuluar dhe matje të Core Web Vitals.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setPortfolioViewMode('simulator')}
+              className="btn-primary-orange btn-glow-hover px-5 py-2.5 rounded-xl text-xs font-bold text-white whitespace-nowrap flex items-center gap-2 cursor-pointer shadow-md shrink-0"
+            >
+              <span>HAP SIMULATORIN</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </button>
+          </div>
+        </>
+      ) : (
+        /* Confirmed Interactive Device Viewport Simulation Station (Desktop vs Mobile) */
+        <motion.div
+          key="portfolio-simulator-station"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.35 }}
+          className="rounded-3xl bg-neutral-900/40 backdrop-blur-md border border-white/10 p-6 sm:p-10 relative shadow-2xl overflow-hidden"
+        >
+          {/* Ambient Top Light Beam */}
+          <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-[#dd6b4d]/60 to-transparent" />
 
-        {/* Switcher & Project Quick Select Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-6 mb-8 border-b border-white/[0.08] gap-6">
+          {/* Switcher & Project Quick Select Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-6 mb-8 border-b border-white/[0.08] gap-6">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -629,6 +797,113 @@ export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({
           </div>
         </div>
       </motion.div>
+    )}
+  </AnimatePresence>
+
+      {/* Interactive Ultra-HD Image Inspector Modal */}
+      <AnimatePresence>
+        {selectedZoomProject && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200 print:hidden"
+            onClick={() => {
+              setSelectedZoomProject(null);
+              setIsMagnified(false);
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as const }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-5xl max-h-[92vh] rounded-3xl bg-[#140e0d] border border-white/15 shadow-[0_25px_70px_rgba(0,0,0,0.95)] flex flex-col overflow-hidden"
+            >
+              {/* Header Bar */}
+              <div className="p-4 sm:p-5 bg-[#1b1311] border-b border-white/[0.08] flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#251815] border border-[#dd6b4d]/40 flex items-center justify-center text-[#dd6b4d] shrink-0">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-display text-base sm:text-lg font-bold text-[#fbf8f5]">
+                        {selectedZoomProject.title}
+                      </h4>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-[10px] font-mono-tabular text-emerald-400 font-bold uppercase">
+                        Ultra-HD 4K
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#b3a8a2] font-mono-tabular">
+                      {selectedZoomProject.client} · {selectedZoomProject.category} ({selectedZoomProject.year})
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsMagnified(!isMagnified)}
+                    className="px-3 py-1.5 rounded-xl bg-white/[0.06] text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.12] transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+                    title={isMagnified ? "Përshtat në dritare" : "Zmadho 100%"}
+                  >
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">{isMagnified ? "Përshtat" : "Zmadho"}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedZoomProject(null);
+                      setIsMagnified(false);
+                    }}
+                    className="p-2 rounded-xl bg-white/[0.06] text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.12] transition-colors cursor-pointer"
+                    title="Mbyll inspektimin"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Image Display Surface */}
+              <div className={`flex-1 p-4 sm:p-6 bg-[#0b0b0b] flex items-center justify-center overflow-auto ${isMagnified ? 'cursor-grab' : 'cursor-zoom-in'}`}>
+                <div 
+                  onClick={() => setIsMagnified(!isMagnified)}
+                  className={`transition-all duration-300 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative ${
+                    isMagnified 
+                      ? 'w-[140%] max-w-none transform scale-110 sm:scale-125' 
+                      : 'w-full max-h-[62vh] flex items-center justify-center'
+                  }`}
+                >
+                  <img
+                    src={selectedZoomProject.imageUrl}
+                    alt={selectedZoomProject.title}
+                    className="w-full h-auto max-h-[62vh] object-contain rounded-xl"
+                  />
+                </div>
+              </div>
+
+              {/* Footer Bar with Project Actions */}
+              <div className="p-4 bg-[#171110] border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <p className="text-[#b3a8a2] max-w-xl truncate">
+                  {selectedZoomProject.tagline}
+                </p>
+
+                <div className="flex items-center gap-2 self-end sm:self-auto">
+                  <button
+                    onClick={() => {
+                      const proj = selectedZoomProject;
+                      setSelectedZoomProject(null);
+                      setIsMagnified(false);
+                      onViewLiveDemo(proj);
+                    }}
+                    className="btn-primary-orange btn-glow-hover px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer shadow-md"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>Hap Live Simulator</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

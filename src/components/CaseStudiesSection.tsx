@@ -1,11 +1,15 @@
-import React from 'react';
-import { TrendingUp, ArrowUpRight, Zap, Shield, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { TrendingUp, ArrowUpRight, Zap, Shield, CheckCircle2, Sparkles, ChevronRight, BarChart3 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface CaseStudiesSectionProps {
   onOpenFreeDemo: () => void;
 }
 
 export const CaseStudiesSection: React.FC<CaseStudiesSectionProps> = ({ onOpenFreeDemo }) => {
+  const [selectedCaseId, setSelectedCaseId] = useState<string>('fintech-migration');
+  const [activeTabType, setActiveTabType] = useState<'solution' | 'problem'>('solution');
+
   const caseStudies = [
     {
       id: 'fintech-migration',
@@ -48,95 +52,189 @@ export const CaseStudiesSection: React.FC<CaseStudiesSectionProps> = ({ onOpenFr
     }
   ];
 
+  const activeCase = caseStudies.find(c => c.id === selectedCaseId) || caseStudies[0];
+
   return (
-    <section id="case-studies" className="py-20 px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08]">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+    <section id="case-studies" className="py-20 sm:py-28 lg:py-36 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08] relative">
+      {/* Subtle Ambient Radial Lighting */}
+      <div 
+        className="absolute top-1/2 right-1/4 w-[550px] h-[320px] rounded-full pointer-events-none opacity-20 blur-[130px]"
+        style={{
+          background: 'radial-gradient(circle, rgba(221, 107, 77, 0.35) 0%, transparent 70%)'
+        }}
+      />
+
+      {/* Section Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-16 gap-6">
         <div>
           <div className="inline-flex items-center gap-2 mb-3 text-xs text-[#b3a8a2]">
             <TrendingUp className="w-3.5 h-3.5 text-[#dd6b4d]" />
-            <span className="font-body uppercase tracking-[0.08em] font-bold text-[#ff9d82]">
-              Quantified Outcomes
+            <span className="font-body uppercase tracking-[0.1em] font-bold text-[#ff9d82]">
+              Quantified Outcomes · Case Studies
             </span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#fbf8f5]">
+          <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#fbf8f5]">
             Proven Engineering ROI
           </h2>
+          <p className="font-body text-xs sm:text-sm text-[#b3a8a2] mt-2 max-w-xl leading-relaxed">
+            Transformime të matshme biznesi: krahasime para dhe pas që dëshmojnë se si shpejtësia nën-sekondëshe dhe arkitektura e pastër rrisin shitjet.
+          </p>
         </div>
-        <p className="font-body text-sm text-[#b3a8a2] max-w-md">
-          Measurable client transformation: before-and-after benchmarks demonstrating how sub-second speeds translate into direct business revenue.
-        </p>
+
+        {/* Interactive Client Case Switcher Tabs */}
+        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-neutral-900/60 backdrop-blur-md border border-white/10 rounded-2xl self-start md:self-auto shadow-lg">
+          {caseStudies.map((cs) => {
+            const isSelected = cs.id === activeCase.id;
+            return (
+              <button
+                key={cs.id}
+                onClick={() => setSelectedCaseId(cs.id)}
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+                  isSelected
+                    ? 'bg-[#dd6b4d] text-white shadow-[0_0_16px_rgba(221,107,77,0.4)]'
+                    : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/5'
+                }`}
+              >
+                {cs.client}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        {caseStudies.map((cs) => (
-          <div
-            key={cs.id}
-            className="p-7 rounded-2xl card-chocolate border border-white/[0.08] hover:border-[#dd6b4d]/40 flex flex-col justify-between transition-all duration-300"
-          >
+      {/* Featured Executive Case Showcase (Consolidated & Uncluttered) */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeCase.id}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.35 }}
+          className="rounded-3xl bg-neutral-900/40 backdrop-blur-md border border-white/10 p-6 sm:p-10 relative overflow-hidden shadow-2xl"
+        >
+          {/* Subtle Top Accent Beam */}
+          <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-[#dd6b4d]/60 to-transparent" />
+
+          {/* Top Info Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-white/[0.08] gap-4">
             <div>
-              <div className="flex items-center justify-between text-xs font-mono-tabular text-[#b3a8a2] mb-3">
-                <span className="text-[#dd6b4d] font-bold">{cs.client}</span>
-                <span>{cs.domain}</span>
+              <div className="flex items-center gap-2 mb-2 text-xs font-mono-tabular">
+                <span className="text-[#dd6b4d] font-bold">{activeCase.client}</span>
+                <span className="text-white/20">·</span>
+                <span className="text-[#b3a8a2]">{activeCase.domain}</span>
               </div>
-
-              <h3 className="font-display text-xl font-bold text-[#fbf8f5] mb-4">
-                {cs.client} Architecture Overhaul
+              <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[#fbf8f5]">
+                {activeCase.client} Architecture Overhaul
               </h3>
-
-              <div className="space-y-4 mb-6 text-xs text-[#b3a8a2] leading-relaxed">
-                <div className="p-3 rounded-lg bg-[#0b0b0b]/60 border border-white/[0.04]">
-                  <strong className="text-rose-400 block mb-1 font-mono-tabular uppercase text-[10px]">The Challenge:</strong>
-                  <span>{cs.problem}</span>
-                </div>
-                <div className="p-3 rounded-lg bg-[#0b0b0b]/60 border border-white/[0.04]">
-                  <strong className="text-emerald-400 block mb-1 font-mono-tabular uppercase text-[10px]">Our Engineered Solution:</strong>
-                  <span>{cs.solution}</span>
-                </div>
-              </div>
-
-              {/* Quantified Results Strip */}
-              <div className="space-y-2 mb-6">
-                {cs.results.map((res, rIdx) => (
-                  <div key={rIdx} className="flex items-center justify-between p-2.5 rounded-lg bg-[#1c1513] border border-white/[0.06] text-xs">
-                    <span className="text-[#b3a8a2] text-[11px] truncate">{res.label}</span>
-                    <span className="font-mono-tabular font-bold text-[#fbf8f5] text-sm shrink-0 ml-2">
-                      {res.metric}
-                    </span>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            <div>
-              <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.06] text-[11px] text-[#b3a8a2]">
-                {cs.tech.map((t, idx) => (
-                  <span key={idx} className="px-2 py-0.5 rounded bg-white/[0.04] text-[#ff9d82]">
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-mono-tabular text-xs font-semibold flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Verified ROI Benchmark</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left Column: Interactive Challenge vs Solution Accordion/Tab */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* Interactive Accordion Toggles */}
+              <div className="flex items-center gap-2 p-1 bg-black/60 rounded-xl border border-white/10 w-fit">
+                <button
+                  onClick={() => setActiveTabType('solution')}
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                    activeTabType === 'solution'
+                      ? 'bg-[#dd6b4d] text-white shadow-sm'
+                      : 'text-[#b3a8a2] hover:text-[#fbf8f5]'
+                  }`}
+                >
+                  Zgjidhja e Inxhinieruar (Solution)
+                </button>
+                <button
+                  onClick={() => setActiveTabType('problem')}
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                    activeTabType === 'problem'
+                      ? 'bg-[#dd6b4d] text-white shadow-sm'
+                      : 'text-[#b3a8a2] hover:text-[#fbf8f5]'
+                  }`}
+                >
+                  Sfida Fillestare (The Challenge)
+                </button>
+              </div>
+
+              {/* Dynamic Content Card */}
+              <div className="p-6 rounded-2xl bg-black/50 border border-white/10 min-h-[140px] flex flex-col justify-center">
+                {activeTabType === 'solution' ? (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 font-mono-tabular text-xs uppercase font-bold text-emerald-400">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span>Arkitektura & Zgjidhja</span>
+                    </div>
+                    <p className="font-body text-xs sm:text-sm text-[#fbf8f5] leading-relaxed">
+                      {activeCase.solution}
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 font-mono-tabular text-xs uppercase font-bold text-rose-400">
+                      <Zap className="w-4 h-4 text-rose-400" />
+                      <span>Problemi & Kostoja e Shpejtësisë së Ngadaltë</span>
+                    </div>
+                    <p className="font-body text-xs sm:text-sm text-[#b3a8a2] leading-relaxed">
+                      {activeCase.problem}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Tech Stack Pills */}
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                <span className="text-xs text-[#b3a8a2] font-mono-tabular">Teknologjitë e Përdorura:</span>
+                {activeCase.tech.map((t, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[#fbf8f5] text-xs font-mono-tabular"
+                  >
                     {t}
                   </span>
                 ))}
               </div>
             </div>
-          </div>
-        ))}
-      </div>
 
-      {/* Callout Banner */}
-      <div className="p-8 rounded-2xl bg-gradient-to-r from-[#171211] via-[#221816] to-[#171211] border border-[#dd6b4d]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-xl">
-        <div>
-          <h4 className="font-display text-xl sm:text-2xl font-bold text-[#fbf8f5] mb-1">
-            Ready to achieve comparable speed & conversion metrics?
-          </h4>
-          <p className="text-xs text-[#b3a8a2]">
-            Book a 30-minute discovery session with our lead architects. We will audit your current site live on the call.
-          </p>
-        </div>
-        <button
-          onClick={onOpenFreeDemo}
-          className="btn-primary-orange px-6 py-3 text-xs rounded-lg uppercase tracking-wider font-bold whitespace-nowrap cursor-pointer shrink-0"
-        >
-          CLAIM YOUR FREE AUDIT
-        </button>
-      </div>
+            {/* Right Column: Quantitative Results Grid & Direct CTA */}
+            <div className="lg:col-span-5 space-y-4">
+              <span className="block text-xs font-mono-tabular uppercase tracking-wider text-[#dd6b4d] font-bold">
+                Rezultatet e Matshme:
+              </span>
+
+              <div className="space-y-3">
+                {activeCase.results.map((res, rIdx) => (
+                  <div
+                    key={rIdx}
+                    className="flex items-center justify-between p-4 rounded-xl bg-black/50 border border-white/10 hover:border-[#dd6b4d]/30 transition-colors"
+                  >
+                    <span className="text-xs text-[#b3a8a2]">{res.label}</span>
+                    <span className="font-mono-tabular text-lg sm:text-xl font-extrabold text-emerald-400">
+                      {res.metric}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-4">
+                <button
+                  onClick={onOpenFreeDemo}
+                  className="btn-primary-orange btn-glow-hover w-full py-3 text-xs rounded-xl uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer font-bold shadow-lg"
+                >
+                  <span>KËRKO NJË ZGJIDHJE TË NGJASHME</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </section>
   );
 };

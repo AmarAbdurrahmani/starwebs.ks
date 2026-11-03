@@ -1,89 +1,57 @@
-# STARWEBS.KS — Trust & Verification Section & Kosovo Business Integrity Architecture
+# Implementation Plan: Official Logo Integration & Mobile-First Optimization
 
-Architectural plan to integrate a dedicated **Trust & Verification** section (`TrustVerificationSection.tsx`) directly before the Contact section, and update the **Footer** (`Footer.tsx`) with verified Kosovo enterprise trust links (ARBK registration and Superpuna government platform).
-
----
-
-## User Review & Critical Decisions
-
-> [!IMPORTANT]
-> The following user preferences were confirmed in Phase 1:
-
-- **Confirmed Placement**: Placed directly before the Contact & Commission section (`#trust` section right above `#contact`), providing immediate institutional confidence and credibility before users submit their inquiry.
-- **Confirmed Primary CTA**: `"Shiko Pozitat e Hapura në Superpuna"` linking to `https://superpuna.rks-gov.net/job-seeker/employer/starwebs-ks` with external security attributes (`target="_blank" rel="noopener noreferrer"`).
-- **Confirmed Aesthetic**: Obsidian Dark with authentic glassmorphism (`bg-neutral-900/40`, `backdrop-blur-md`, `border border-white/10`), minimal government-grade badges, and smooth Framer Motion scroll entrance (`whileInView`).
+Integrate the official STARWEBS.KS agency circular emblem (`/assets/aistudio/logo_e0adced0.png`) across the digital touchpoints and implement full mobile-first optimizations for seamless responsiveness, navigation, and readability.
 
 ---
 
-## 1. Overview & Core Concept
+## User Review Required
 
-- **Business Credibility & Regional Trust**:
-  - Establish that **STARWEBS.KS** is an officially registered business entity in Kosovo through the **Agjencia për Regjistrimin e Bizneseve në Kosovë (ARBK)**.
-  - Highlight active engagement in youth employment and developer hiring through **Superpuna** (the Republic of Kosovo Ministry of Finance & Employment initiative: `rks-gov.net`).
-- **Target Audience Impact**:
-  - Eliminates skepticism for domestic and international clients by verifying legal status and public government-verified employer credentials.
-  - Attracts ambitious developer talent looking for high-performance React/Next.js/TypeScript engineering roles.
+> [!NOTE]
+> Based on your selections:
+> 1. **Header Logo**: Circular emblem with crisp STARWEBS wordmark next to it in a unified luxury glass badge.
+> 2. **AI Chatbot on Mobile**: Compact bottom-right floating trigger with safe spacing above mobile edges (`bottom-4 right-4 sm:bottom-6 sm:right-6`) and full-screen backdrop blur (`backdrop-blur-md bg-black/70`) when open.
 
 ---
 
-## 2. User Experience & Visual Design
+## Proposed Changes
 
-### A. Seksioni "Trust & Verification" (`src/components/TrustVerificationSection.tsx`)
-- **Container**: Sits in `<main>` with `id="trust"`, constrained to `max-w-[1440px]`, bordered by `border-t border-white/[0.08]`.
-- **Atmospheric Glow**: Subtle copper-cyan backdrop illumination and minimal grid overlay.
-- **Header**:
-  - Badge: `Besueshmëria & Integriteti Zyrtar · Verified Kosovo Business`.
-  - Headline: `Agjenci e Regjistruar Zyrtarisht & e Përkushtuar ndaj Talentit`.
-  - Subtitle: `Transparencë e plotë institucionale, zhvillim i standardeve evropiane të inxhinierisë dhe punësim i vazhdueshëm i gjeneratës së re të programuesve.`
-- **Grid Layout (2 Balanced Glassmorphic Cards)**:
-  1. **ARBK Registration Card**:
-     - Visual Icon: Verified Shield / Building2.
-     - Headline: `Regjistruar Zyrtarisht në ARBK`.
-     - Details: `Agjencia për Regjistrimin e Bizneseve të Kosovës (Ministria e Industrisë, Ndërmarrësisë dhe Tregtisë)`.
-     - Badges: `Statusi: Aktiv`, `Pajtueshmëri Ligjore 100%`, `Faturim Zyrtar & Kontrata B2B`.
-  2. **Superpuna Verified Employer Card**:
-     - Visual Icon: Briefcase / Users / Sparkles with emerald accent.
-     - Headline: `Punëdhënës i Verifikuar në Superpuna`.
-     - Details: `Platforma qeveritare e Republikës së Kosovës për punësimin dhe fuqizimin e të rinjve në sektorin e teknologjisë.`.
-     - Call to Action Button:
-       - Label: `"Shiko Pozitat e Hapura në Superpuna"`
-       - Icon: `ArrowUpRight`
-       - URL: `https://superpuna.rks-gov.net/job-seeker/employer/starwebs-ks`
-       - Style: `btn-primary-orange btn-glow-hover` (or sleek glass emerald accent button).
+### 1. Navigation Header & Mobile Menu (`src/components/TopBar.tsx`)
+- **Official Brand Mark**: Embed the circular emblem (`/assets/aistudio/logo_e0adced0.png`, 36px height) with rounded luxury framing alongside the crisp `STARWEBS.KS` typography and glowing obsidian accent dot.
+- **Mobile Hamburger Navigation**: 
+  - Add an intuitive mobile hamburger toggle (`Menu` / `X` icon) visible on `< lg` screens.
+  - Render an animated glassmorphic slide-out / drawer menu with `bg-neutral-950/95 backdrop-blur-xl border-b border-white/10`.
+  - Provide direct mobile navigation buttons (Overview, Services, Portfolio, Case Studies, Contact) + "Kërko Demo Falas" CTA.
 
-### B. Footer Updates (`src/components/Footer.tsx`)
-- Add a new **Verified Kosovo Business Links** block:
-  - Official ARBK verification badge with text: `Biznes i Regjistruar në ARBK`.
-  - Direct Superpuna link: `Profili në Superpuna` linking to `https://superpuna.rks-gov.net/job-seeker/employer/starwebs-ks`.
-- Add quick jump link to `#trust` in Agency Navigation.
+### 2. Agency Footer & Booking Voucher (`src/components/Footer.tsx` & `src/components/FreeDemoModal.tsx`)
+- **Footer**: Place the official emblem next to the agency brand title in the primary brand column with quick ARBK and Superpuna trust verification links.
+- **Booking Voucher Slip (`FreeDemoModal.tsx`)**: Replace generic placeholder with the official circular logo in the top voucher header and printable slip (`max-w-[70px]` high-DPI display with "STARWEBS.KS - Digital Engineering Agency" letterhead).
+
+### 3. Responsive Spacing & Layout Harmonization
+- **Hero Section (`src/components/HeroSection.tsx`)**:
+  - Adjust mobile padding from `py-20` down to `pt-24 pb-12 px-4 sm:px-6` to avoid empty screen bulk.
+  - Scale typography cleanly (`text-3xl sm:text-5xl lg:text-6xl`) with controlled line-height to prevent word clipping.
+  - Ensure stats cards and action buttons wrap effortlessly on narrow screens (iPhone SE / 360px+).
+- **Portfolio Bento Grid (`src/components/PortfolioShowcase.tsx`)**:
+  - Ensure single-column stacking (`grid-cols-1 md:grid-cols-12`) on mobile with 16:9 cinematic framing and zero horizontal overflow.
+  - Refine modal image inspector controls for touch devices (compact close and zoom toggles).
+- **Trust & Verification Section (`src/components/TrustVerificationSection.tsx`)**:
+  - Tighten container paddings (`py-12 sm:py-20 px-4 sm:px-8`) and ensure ARBK & Superpuna badge cards stack neatly in 1 column on mobile screens.
+
+### 4. AI Chatbot Widget Mobile Isolation (`src/components/ChatbotWidget.tsx`)
+- **Compact Trigger**: Position with mobile safe area padding (`bottom-4 right-4 sm:bottom-6 sm:right-6`) so it never collides with sticky elements or bottom bars.
+- **Mobile Full Backdrop Overlay**: When open, render a full-screen `fixed inset-0 bg-black/70 backdrop-blur-md z-40` isolating the chat interface from background noise.
+- **Responsive Chat Window Dimensions**: Ensure the chat modal fits within `w-[calc(100vw-2rem)] sm:w-[420px]` and `max-h-[82vh] sm:max-h-[640px]`, with sticky header and mobile-friendly tap targets.
 
 ---
 
-## 3. Technical Architecture & Component Structure
+## Verification Plan
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     App.tsx (<main>)                            │
-│  ├── HeroSection                                                │
-│  ├── HighImpactStatsBar                                         │
-│  ├── ServicesSection                                            │
-│  ├── PortfolioShowcase (Bento Grid)                             │
-│  ├── TechStackGrid                                              │
-│  ├── CaseStudiesSection                                         │
-│  ├── TrustVerificationSection (NEW: ARBK + Superpuna)           │
-│  └── ContactSection                                             │
-└────────────────────────────────┬────────────────────────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │       Footer.tsx        │
-                    │ - ARBK Business Link    │
-                    │ - Superpuna Direct Link │
-                    │ - WhatsApp & Instagram  │
-                    └─────────────────────────┘
-```
+### Automated Checks
+- Run `npm run build` / TypeScript verification (`compile_applet`) to ensure type safety, zero broken imports, and clean packaging.
+- Run `lint_applet` to check for syntax and lint cleanliness.
 
-### Implementation Sequence
-1. Create `src/components/TrustVerificationSection.tsx` with Framer Motion scroll reveal and glassmorphic cards.
-2. Update `src/components/Footer.tsx` with the new trust links.
-3. Update `src/App.tsx` to mount `TrustVerificationSection` directly before `ContactSection`.
-4. Verify with `lint_applet` and `compile_applet`.
+### Manual Verification
+- Test navbar hamburger toggle behavior on mobile viewport widths (375px, 414px) and ensure desktop view remains uncluttered.
+- Verify that `/assets/aistudio/logo_e0adced0.png` renders sharply in header, footer, and printable voucher slip.
+- Verify chatbot trigger position and backdrop blur overlay activation on mobile screen preview.
+- Confirm zero horizontal scroll or clipped headings across all breakpoints.

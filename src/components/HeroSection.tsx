@@ -16,7 +16,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [selectedBenchmark, setSelectedBenchmark] = useState<'starwebs' | 'generic'>('starwebs');
 
   return (
-    <section id="overview" className="relative pt-12 pb-20 px-6 lg:px-12 max-w-[1440px] mx-auto overflow-hidden">
+    <section id="overview" className="relative pt-8 sm:pt-14 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto overflow-hidden">
       {/* Subtle atmospheric burnt orange glow in background */}
       <div
         className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[760px] h-[420px] rounded-full pointer-events-none opacity-30 blur-[140px]"
@@ -25,7 +25,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }}
       />
 
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mb-16">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center mb-12 sm:mb-16">
         {/* Left Column: Bold Impactful Typography & Value Proposition with Staggered Motion */}
         <div className="lg:col-span-7 flex flex-col justify-center">
           {/* Header Badges with WhatsApp and Instagram */}
@@ -33,11 +33,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-wrap items-center gap-2.5 mb-6"
+            className="flex flex-wrap items-center gap-2 mb-4 sm:mb-6"
           >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-900/50 border border-white/10 backdrop-blur-md shadow-inner">
+            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-neutral-900/50 border border-white/10 backdrop-blur-md shadow-inner">
               <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] shadow-[0_0_8px_#dd6b4d] animate-pulse" />
-              <span className="font-body text-[11px] font-bold tracking-[0.08em] uppercase text-[#ff9d82]">
+              <span className="font-body text-[10px] sm:text-[11px] font-bold tracking-[0.08em] uppercase text-[#ff9d82]">
                 Digital Engineering & Web Agency
               </span>
             </div>
@@ -47,7 +47,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               href="https://instagram.com/starwebs.ks"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900/50 border border-white/10 text-xs text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/40 transition-colors backdrop-blur-md"
+              className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3 sm:py-1.5 rounded-full bg-neutral-900/50 border border-white/10 text-xs text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/40 transition-colors backdrop-blur-md"
             >
               <Instagram className="w-3.5 h-3.5 text-[#dd6b4d]" />
               <span className="text-[11px] font-mono-tabular">@starwebs.ks</span>
@@ -58,7 +58,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display text-4xl sm:text-5xl lg:text-[62px] font-extrabold leading-[1.08] tracking-[-0.03em] text-[#fbf8f5] mb-6 text-balance"
+            className="font-display text-3xl sm:text-5xl lg:text-[62px] font-extrabold leading-[1.14] sm:leading-[1.08] tracking-[-0.03em] text-[#fbf8f5] mb-4 sm:mb-6 text-balance"
           >
             Crafting High-Performance, Modern & Mobile-Friendly Websites for Ambitious Businesses
           </motion.h1>
@@ -67,7 +67,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-            className="font-body text-base lg:text-lg leading-relaxed text-[#b3a8a2] max-w-2xl mb-8"
+            className="font-body text-sm sm:text-base lg:text-lg leading-relaxed text-[#b3a8a2] max-w-2xl mb-6 sm:mb-8"
           >
             At <strong className="text-[#fbf8f5] font-semibold">starwebs.ks</strong>, we replace slow, bloated templates with bespoke web engineering. From headless e-commerce stores to lightning-fast web applications, we build digital flagship products engineered for speed, conversion, and clean design.
           </motion.p>
@@ -77,13 +77,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.42 }}
-            className="flex flex-wrap items-center gap-3.5 mb-2"
+            className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 mb-2"
           >
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               onClick={onOpenFreeDemo}
-              className="btn-primary-orange btn-glow-hover px-7 py-3.5 text-xs font-bold rounded-lg tracking-wider uppercase flex items-center gap-2 cursor-pointer shadow-lg"
+              className="btn-primary-orange btn-glow-hover px-6 sm:px-7 py-3 sm:py-3.5 text-xs font-bold rounded-lg tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg"
             >
               <span>GET A FREE DEMO</span>
               <ArrowRight className="w-4 h-4" />
@@ -91,22 +91,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Prominent WhatsApp Button in Hero */}
             <motion.a
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               href="https://wa.me/38348881191"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-3.5 rounded-lg bg-emerald-950/70 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/80 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all text-xs font-bold uppercase tracking-wider cursor-pointer shadow-md"
+              className="flex items-center justify-center gap-2 px-5 py-3 sm:py-3.5 rounded-lg bg-emerald-950/70 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/80 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all text-xs font-bold uppercase tracking-wider cursor-pointer shadow-md"
             >
               <MessageCircle className="w-4 h-4 text-emerald-400" />
               <span>WhatsApp: +383 48 881 191</span>
             </motion.a>
 
             <motion.button
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onOpenPortfolio}
-              className="btn-secondary-dark px-5 py-3.5 text-xs font-semibold rounded-lg tracking-wider uppercase cursor-pointer"
+              className="btn-secondary-dark px-5 py-3 sm:py-3.5 text-xs font-semibold rounded-lg tracking-wider uppercase cursor-pointer text-center"
             >
               SHIKO PORTOFOLIN
             </motion.button>

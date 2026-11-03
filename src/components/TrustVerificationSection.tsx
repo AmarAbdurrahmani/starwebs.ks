@@ -14,7 +14,7 @@ import {
 
 export const TrustVerificationSection: React.FC = () => {
   return (
-    <section id="trust" className="py-24 px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08] relative">
+    <section id="trust" className="py-20 sm:py-28 lg:py-36 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08] relative">
       {/* Subtle ambient lighting */}
       <div 
         className="absolute top-1/2 left-1/3 w-[500px] h-[300px] rounded-full pointer-events-none opacity-20 blur-[140px]"
@@ -29,7 +29,7 @@ export const TrustVerificationSection: React.FC = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="text-center max-w-3xl mx-auto mb-16"
+        className="text-center max-w-3xl mx-auto mb-10 sm:mb-16"
       >
         <div className="inline-flex items-center gap-2 mb-3 px-3.5 py-1.5 rounded-full bg-neutral-900/50 border border-white/10 backdrop-blur-md">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -38,11 +38,11 @@ export const TrustVerificationSection: React.FC = () => {
           </span>
         </div>
         
-        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#fbf8f5] mb-4">
+        <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#fbf8f5] mb-3 sm:mb-4">
           Biznes i Regjistruar Zyrtarisht & Angazhim Aktiv në Punësim
         </h2>
         
-        <p className="font-body text-sm sm:text-base text-[#b3a8a2] leading-relaxed">
+        <p className="font-body text-xs sm:text-base text-[#b3a8a2] leading-relaxed">
           Në <strong className="text-[#fbf8f5]">starwebs.ks</strong>, transparenca ligjore dhe përgjegjësia profesionale janë themeli ynë. Ne operojmë në përputhje të plotë me legjislacionin e Republikës së Kosovës dhe investojmë në zhvillimin e inxhinierëve të rinj përmes platformave zyrtare të punësimit.
         </p>
       </motion.div>

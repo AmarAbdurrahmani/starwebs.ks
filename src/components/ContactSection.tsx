@@ -32,21 +32,21 @@ export const ContactSection: React.FC = () => {
   const quoteId = 'STW-' + Math.floor(1000 + Math.random() * 9000);
 
   return (
-    <section id="contact" className="py-20 px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08]">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    <section id="contact" className="py-20 sm:py-28 lg:py-36 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column: Direct WhatsApp, Instagram & SLA Guarantees */}
         <div className="lg:col-span-5 space-y-6">
           <div>
-            <div className="inline-flex items-center gap-2 mb-3 text-xs text-[#b3a8a2]">
+            <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 text-xs text-[#b3a8a2]">
               <Sparkles className="w-3.5 h-3.5 text-[#dd6b4d]" />
               <span className="font-body uppercase tracking-[0.08em] font-bold text-[#ff9d82]">
                 Start Your Project
               </span>
             </div>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#fbf8f5] mb-4">
+            <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#fbf8f5] mb-3 sm:mb-4">
               Request a Website Consultation & Custom Quote
             </h2>
-            <p className="font-body text-sm text-[#b3a8a2] leading-relaxed">
+            <p className="font-body text-xs sm:text-sm text-[#b3a8a2] leading-relaxed">
               Tell us about your brand, current challenges, and project vision. Our lead engineering team will review your requirements and provide an architectural blueprint with fixed pricing within 24 hours.
             </p>
           </div>

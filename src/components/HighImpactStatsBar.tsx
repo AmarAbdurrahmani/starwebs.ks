@@ -30,20 +30,20 @@ export const HighImpactStatsBar: React.FC = () => {
   ];
 
   return (
-    <section className="py-12 px-6 lg:px-12 max-w-[1440px] mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <section className="py-10 sm:py-16 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {stats.map((item, idx) => {
           const Icon = item.icon;
           return (
             <div
               key={idx}
-              className="p-6 rounded-2xl card-chocolate border border-white/[0.08] hover:border-[#dd6b4d]/40 transition-all duration-300 relative group"
+              className="p-6 rounded-2xl bg-neutral-900/40 backdrop-blur-md border border-white/10 hover:border-[#dd6b4d]/40 hover:bg-neutral-900/60 transition-all duration-300 relative group shadow-lg"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-[#221816] border border-[#dd6b4d]/30 flex items-center justify-center text-[#dd6b4d] group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-xl bg-black/60 border border-white/10 flex items-center justify-center text-[#dd6b4d] group-hover:scale-105 transition-transform">
                   <Icon className="w-5 h-5" />
                 </div>
-                <span className="font-mono-tabular text-xs font-bold text-[#dd6b4d] bg-[#dd6b4d]/10 px-2 py-0.5 rounded border border-[#dd6b4d]/20">
+                <span className="font-mono-tabular text-xs font-bold text-[#dd6b4d] bg-[#dd6b4d]/10 px-2.5 py-0.5 rounded-full border border-[#dd6b4d]/20">
                   {item.metric}
                 </span>
               </div>

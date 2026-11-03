@@ -97,13 +97,19 @@ export const FreeDemoModal: React.FC<FreeDemoModalProps> = ({
           <div>
             {/* Modal Header & Progress Indicator */}
             <div className="mb-6">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-pulse" />
+              <div className="flex items-center gap-2.5 mb-2">
+                <div className="w-6 h-6 rounded-full overflow-hidden border border-[#dd6b4d]/50 shrink-0 bg-[#0d0908] shadow-[0_0_8px_rgba(221,107,77,0.4)]">
+                  <img
+                    src="/assets/aistudio/logo_e0adced0.png"
+                    alt="STARWEBS.KS Logo"
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                </div>
                 <span className="font-mono-tabular text-xs font-bold text-[#dd6b4d] uppercase tracking-wider">
-                  Rezervim Demo Falas & Konsultim Arkitekture
+                  STARWEBS.KS • Rezervim Demo Falas & Arkitekturë
                 </span>
               </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[#fbf8f5]">
+              <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-extrabold text-[#fbf8f5]">
                 {currentStep === 1 && 'Cilat janë qëllimet kryesore të projektit tuaj?'}
                 {currentStep === 2 && 'Afati Kohor & Pritshmëritë e Buxhetit'}
                 {currentStep === 3 && 'Ku dëshironi t\'jua dërgojmë prototipin live?'}
@@ -365,13 +371,17 @@ export const FreeDemoModal: React.FC<FreeDemoModalProps> = ({
               {/* Voucher Header Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-5 border-b border-white/10 gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#dd6b4d]/15 border border-[#dd6b4d]/40 flex items-center justify-center text-[#dd6b4d] font-bold font-display text-lg shadow-inner">
-                    S
+                  <div className="w-12 h-12 rounded-full overflow-hidden border border-[#dd6b4d]/50 bg-[#0d0908] p-0.5 shadow-[0_0_14px_rgba(221,107,77,0.4)] shrink-0">
+                    <img
+                      src="/assets/aistudio/logo_e0adced0.png"
+                      alt="STARWEBS.KS Official Logo"
+                      className="w-full h-full object-cover rounded-full"
+                    />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="font-display font-extrabold tracking-tight text-lg sm:text-xl text-[#fbf8f5]">
-                        STARWEBS.KS
+                        STARWEBS<span className="text-[#dd6b4d]">.KS</span>
                       </span>
                       <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d]" />
                     </div>

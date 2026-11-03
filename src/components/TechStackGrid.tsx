@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Layers, CheckCircle2, ChevronRight, Terminal, Cpu } from 'lucide-react';
+import { Layers, CheckCircle2, ChevronRight, Terminal, Cpu, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface TechItem {
   id: string;
@@ -12,6 +13,7 @@ interface TechItem {
 
 export const TechStackGrid: React.FC = () => {
   const [selectedTech, setSelectedTech] = useState<string>('nextjs');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const techList: TechItem[] = [
     {
@@ -80,40 +82,75 @@ export const TechStackGrid: React.FC = () => {
     }
   ];
 
-  const activeItem = techList.find(t => t.id === selectedTech) || techList[0];
+  const categories = ['All', 'Frontend', 'Backend', 'Database', 'E-Commerce', 'Styling'];
+
+  const filteredTech = selectedCategory === 'All'
+    ? techList
+    : techList.filter(t => t.category === selectedCategory);
+
+  const activeItem = techList.find(t => t.id === selectedTech) || filteredTech[0] || techList[0];
 
   return (
-    <section className="py-20 px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08]">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <section className="py-20 sm:py-28 lg:py-36 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto border-t border-white/[0.08] relative">
+      {/* Background glow */}
+      <div 
+        className="absolute top-1/2 left-1/3 w-[500px] h-[300px] rounded-full pointer-events-none opacity-20 blur-[140px]"
+        style={{
+          background: 'radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, transparent 70%)'
+        }}
+      />
+
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-16 gap-6">
         <div>
           <div className="inline-flex items-center gap-2 mb-3 text-xs text-[#b3a8a2]">
             <Cpu className="w-3.5 h-3.5 text-[#dd6b4d]" />
-            <span className="font-body uppercase tracking-[0.08em] font-bold text-[#ff9d82]">
-              Engineering Arsenal
+            <span className="font-body uppercase tracking-[0.1em] font-bold text-[#ff9d82]">
+              Engineering Arsenal · Tech Stack
             </span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#fbf8f5]">
+          <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#fbf8f5]">
             Modern Tech Stack & Architecture
           </h2>
+          <p className="font-body text-xs sm:text-sm text-[#b3a8a2] mt-2 max-w-xl leading-relaxed">
+            Zero legacy baggage. Ne ndërtojmë ekskluzivisht me teknologji të provuara në shkallë globale, të optimizuara për shpejtësi dhe qëndrueshmëri shumëvjeçare.
+          </p>
         </div>
-        <p className="font-body text-sm text-[#b3a8a2] max-w-md">
-          Zero legacy baggage. We exclusively build with battle-tested, high-velocity technologies built for speed and longevity.
-        </p>
+
+        {/* Category Tabs Switcher (Uncluttered UX) */}
+        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-neutral-900/60 backdrop-blur-md border border-white/10 rounded-2xl self-start md:self-auto shadow-lg">
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+                  isSelected
+                    ? 'bg-[#dd6b4d] text-white shadow-[0_0_16px_rgba(221,107,77,0.4)]'
+                    : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/5'
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Tech Badges Grid Left */}
         <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {techList.map((tech) => {
-            const isSelected = selectedTech === tech.id;
+          {filteredTech.map((tech) => {
+            const isSelected = activeItem.id === tech.id;
             return (
               <button
                 key={tech.id}
                 onClick={() => setSelectedTech(tech.id)}
-                className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between min-h-[108px] ${
+                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between min-h-[110px] ${
                   isSelected
-                    ? 'card-chocolate border-[#dd6b4d] shadow-[0_0_20px_rgba(221,107,77,0.25)] text-[#fbf8f5]'
-                    : 'bg-[#171211]/50 border-white/[0.06] text-[#b3a8a2] hover:border-white/20 hover:bg-[#171211]'
+                    ? 'bg-neutral-900/80 backdrop-blur-md border-[#dd6b4d] shadow-[0_0_24px_rgba(221,107,77,0.25)] ring-1 ring-[#dd6b4d]/40 text-[#fbf8f5]'
+                    : 'bg-neutral-900/40 backdrop-blur-md border-white/10 text-[#b3a8a2] hover:border-[#dd6b4d]/40 hover:bg-neutral-900/60'
                 }`}
               >
                 <div>
@@ -133,18 +170,20 @@ export const TechStackGrid: React.FC = () => {
           })}
         </div>
 
-        {/* Detailed Inspection Panel Right */}
-        <div className="lg:col-span-5 p-7 rounded-2xl card-chocolate-elevated border border-white/[0.12] shadow-xl">
+        {/* Detailed Inspection Panel Right (Glassmorphism) */}
+        <div className="lg:col-span-5 p-7 rounded-3xl bg-neutral-900/40 backdrop-blur-md border border-white/10 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#dd6b4d]/50 to-transparent" />
+
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.08]">
             <span className="font-mono-tabular text-xs font-bold text-[#dd6b4d] uppercase tracking-wider">
               Architecture Analysis
             </span>
-            <span className="text-xs px-2.5 py-0.5 rounded bg-white/[0.06] text-[#fbf8f5] font-mono-tabular">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[#fbf8f5] font-mono-tabular border border-white/10">
               {activeItem.category}
             </span>
           </div>
 
-          <h3 className="font-display text-2xl font-bold text-[#fbf8f5] mb-1">
+          <h3 className="font-display text-2xl font-extrabold text-[#fbf8f5] mb-1">
             {activeItem.name}
           </h3>
           <p className="font-body text-xs text-[#ff9d82] font-semibold mb-4">
@@ -155,7 +194,7 @@ export const TechStackGrid: React.FC = () => {
             {activeItem.description}
           </p>
 
-          <div className="p-4 rounded-xl bg-[#0b0b0b] border border-[#dd6b4d]/30 mb-4">
+          <div className="p-4 rounded-xl bg-black/50 border border-[#dd6b4d]/30 mb-4">
             <span className="text-[10px] font-mono-tabular uppercase tracking-wider text-[#dd6b4d] font-bold block mb-1">
               Direct Performance Benefit
             </span>

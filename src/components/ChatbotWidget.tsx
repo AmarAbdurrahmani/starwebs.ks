@@ -30,8 +30,8 @@ export const ChatbotWidget: React.FC<{ onOpenDemo: () => void }> = ({ onOpenDemo
     {
       id: 'welcome',
       sender: 'ai',
-      text: "👋 Hi! I'm the **Starwebs AI Assistant**. I can help you with website pricing, delivery timelines, custom e-commerce features, or booking a free live demo for **starwebs.ks**.",
-      timestamp: 'Just now'
+      text: "👋 Përshëndetje! Jam **Starwebs AI Assistant**. Mund t'ju ndihmoj me çmimet e faqeve, afatet e dorëzimit, dyqanet e-commerce apo rezervimin e një demoje falas për **starwebs.ks**.",
+      timestamp: 'Tani'
     }
   ];
 
@@ -47,93 +47,94 @@ export const ChatbotWidget: React.FC<{ onOpenDemo: () => void }> = ({ onOpenDemo
     }
   }, [messages, isOpen]);
 
+  // Close with Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const quickPrompts = [
-    'How much does a website cost?',
-    'What is your delivery timeline?',
-    'How do I get a Free Demo?',
-    'Do you build E-Commerce stores?',
-    'Message on WhatsApp (+383 48 881 191)'
+    'Sa kushton një uebfaqe?',
+    'Sa zgjat zhvillimi i faqes?',
+    'Si marr një Demo Falas?',
+    'A ndërtoni dyqane E-Commerce?',
+    'Bisedo në WhatsApp (+383 48 881 191)'
   ];
 
   const handleSendPrompt = async (textToSend: string) => {
     if (!textToSend.trim() || isLoading) return;
 
-    if (textToSend.includes('WhatsApp')) {
-      window.open('https://wa.me/38348881191', '_blank');
-      return;
-    }
-
-    const userMsg: ChatMessage = {
-      id: String(Date.now()),
+    const userMessage: ChatMessage = {
+      id: 'msg-' + Date.now(),
       sender: 'user',
       text: textToSend,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMessage]);
     setInputText('');
     setIsLoading(true);
 
-    // Fast local rule-based response check for zero latency
-    const lower = textToSend.toLowerCase();
-    let localReply: string | null = null;
-
-    if (lower.includes('cost') || lower.includes('price') || lower.includes('pricing') || lower.includes('how much')) {
-      localReply = "Our custom projects start from **€2,900** for mobile-first redesigns, **€3,800** for bespoke web applications, and **€5,200** for headless e-commerce platforms. You can configure your exact scope with our live quote calculator above, or message us on WhatsApp (+383 48 881 191)!";
-    } else if (lower.includes('timeline') || lower.includes('how long') || lower.includes('weeks') || lower.includes('duration')) {
-      localReply = "Typical timelines range from **2 to 4 weeks** for focused landing pages/sprints, and **4 to 8 weeks** for full-scale custom platforms and headless stores. We also provide expedited fast-track delivery (-30% time).";
-    } else if (lower.includes('demo') || lower.includes('free demo') || lower.includes('consultation')) {
-      localReply = "You can claim a **Free Interactive Demo** right now! Click the **GET A FREE DEMO** button at the top of the page, or tap below to open the demo voucher generator.";
-    } else if (lower.includes('ecommerce') || lower.includes('e-commerce') || lower.includes('shop') || lower.includes('store')) {
-      localReply = "We specialize in headless Shopify and custom Stripe architectures with sub-second product filtering, 1-click Apple/Google Pay, and +38% average conversion lift.";
-    }
-
-    if (localReply) {
-      setTimeout(() => {
-        setMessages(prev => [
-          ...prev,
-          {
-            id: String(Date.now() + 1),
-            sender: 'ai',
-            text: localReply!,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            quickActions: lower.includes('demo')
-              ? [{ label: 'Open Free Demo Form', action: onOpenDemo }]
-              : undefined
-          }
-        ]);
-        setIsLoading(false);
-      }, 500);
-      return;
-    }
-
-    // Call server Gemini endpoint
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: textToSend })
+        body: JSON.stringify({
+          message: textToSend,
+          history: messages.slice(-6).map((m) => ({
+            role: m.sender === 'user' ? 'user' : 'model',
+            parts: [{ text: m.text }]
+          }))
+        })
       });
-      const data = await response.json();
-      const replyText = data.reply || "Thank you for asking! For direct inquiries, feel free to chat with our lead engineer on WhatsApp at +383 48 881 191.";
 
-      setMessages(prev => [
+      if (!response.ok) {
+        throw new Error('Network response error');
+      }
+
+      const data = await response.json();
+      const aiReply = data.reply || "Ju falënderojmë për mesazhin! Për specifikime teknike dhe oferta të menjëhershme, mund të kontaktoni drejtpërdrejt inxhinierin tonë në WhatsApp: +383 48 881 191.";
+
+      setMessages((prev) => [
         ...prev,
         {
-          id: String(Date.now() + 1),
+          id: 'ai-' + Date.now(),
           sender: 'ai',
-          text: replyText,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          text: aiReply,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          quickActions: textToSend.toLowerCase().includes('demo') || textToSend.toLowerCase().includes('çmim') || textToSend.toLowerCase().includes('price')
+            ? [{ label: 'Merr një Demo Falas →', action: onOpenDemo }]
+            : undefined
         }
       ]);
-    } catch (err) {
-      setMessages(prev => [
+    } catch {
+      // Graceful offline fallback
+      let fallbackText = "Në **starwebs.ks** ndërtojmë uebfaqe dhe aplikacione moderne me React 19, Next.js dhe Tailwind CSS, të optimizuara për shpejtësi nën 800ms dhe konvertime të larta.";
+
+      const lower = textToSend.toLowerCase();
+      if (lower.includes('kushton') || lower.includes('çmim') || lower.includes('cost') || lower.includes('price')) {
+        fallbackText = "Çmimet tona fillojnë nga **€2,500 – €5,000** për faqe moderne biznesi dhe arrijnë në **€5,000 – €10,000+** për dyqane të avancuara e-commerce me pagesa me 1-klik. Përdorni llogaritësin tonë të preventivit lart ose rezervoni një demo falas!";
+      } else if (lower.includes('afat') || lower.includes('koha') || lower.includes('timeline') || lower.includes('zgjat')) {
+        fallbackText = "Koha mesatare e dorëzimit është **2 deri në 6 javë**, në varësi të kompleksitetit të modulit. Ofroni dhe shërbimin tonë *Ekspres* me prioritet të lartë zhvillimi.";
+      } else if (lower.includes('demo') || lower.includes('falas') || lower.includes('free')) {
+        fallbackText = "Mund të rezervoni një **Demo Falas** me prototip interaktiv duke klikuar butonin 'GET A FREE DEMO' lart, ose duke na shkruar direkt në WhatsApp!";
+      } else if (lower.includes('whatsapp') || lower.includes('kontakt') || lower.includes('numri')) {
+        fallbackText = "Mund të na shkruani drejtpërdrejt në WhatsApp në **+383 48 881 191** për përgjigje të menjëhershme brenda pak minutash.";
+      }
+
+      setMessages((prev) => [
         ...prev,
         {
-          id: String(Date.now() + 1),
+          id: 'ai-' + Date.now(),
           sender: 'ai',
-          text: "We specialize in custom web apps, e-commerce, and sub-second performance. You can reach our engineering team directly on WhatsApp at **+383 48 881 191** or email studio@starwebs.ks.",
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          text: fallbackText,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          quickActions: [{ label: 'Hap Formularin e Demos →', action: onOpenDemo }]
         }
       ]);
     } finally {
@@ -142,184 +143,197 @@ export const ChatbotWidget: React.FC<{ onOpenDemo: () => void }> = ({ onOpenDemo
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 print:hidden chatbot-widget">
-      {/* Floating Trigger Button */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="group relative flex items-center gap-3 px-4 py-3 rounded-full bg-[#1c1513] border border-[#dd6b4d]/40 text-[#fbf8f5] shadow-[0_8px_32px_rgba(0,0,0,0.8),0_0_24px_rgba(221,107,77,0.35)] hover:border-[#dd6b4d] hover:scale-105 transition-all duration-300 cursor-pointer"
-        >
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#dd6b4d] opacity-75" />
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-[#dd6b4d]" />
-          </span>
-
-          <div className="flex items-center gap-2">
-            <Bot className="w-5 h-5 text-[#dd6b4d]" />
-            <span className="font-display text-xs font-bold tracking-wide uppercase pr-1">
-              Starwebs AI Assistant
-            </span>
-          </div>
-
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] bg-[#dd6b4d]/20 text-[#ff9d82] font-mono-tabular border border-[#dd6b4d]/30">
-            Online
-          </span>
-        </button>
+    <>
+      {/* Full-Page Backdrop Blur Overlay (Active when chat is open) */}
+      {isOpen && (
+        <div 
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer print:hidden"
+          title="Kliko për të mbyllur bisedën"
+          aria-label="Close Assistant Overlay"
+        />
       )}
 
-      {/* Expanded Chat Window */}
-      {isOpen && (
-        <div className="w-[360px] sm:w-[400px] h-[520px] rounded-2xl card-chocolate-elevated border border-white/[0.15] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(221,107,77,0.25)] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
-          {/* Header */}
-          <div className="p-4 bg-[#171211] border-b border-white/[0.08] flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#221816] border border-[#dd6b4d]/40 flex items-center justify-center text-[#dd6b4d]">
-                <Bot className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h4 className="font-display text-sm font-bold text-[#fbf8f5]">
-                    Starwebs AI Assistant
-                  </h4>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]" />
-                </div>
-                <span className="text-[10px] text-[#b3a8a2] block">
-                  Web Services, Pricing & Demo Support
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setMessages(initialMessages)}
-                title="Reset conversation"
-                className="p-1.5 rounded-lg text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.06] transition-colors cursor-pointer"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                title="Close Assistant"
-                className="p-1.5 rounded-lg text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.06] transition-colors cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Quick WhatsApp Header Bar */}
-          <a
-            href="https://wa.me/38348881191"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2 bg-emerald-950/40 border-b border-emerald-500/20 flex items-center justify-between text-[11px] text-emerald-300 hover:bg-emerald-950/60 transition-colors"
+      {/* Floating Compact Trigger Button (When Closed) - Mobile Safe Margins */}
+      {!isOpen && (
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 print:hidden chatbot-widget">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-neutral-900/95 backdrop-blur-xl border border-[#dd6b4d]/40 text-[#fbf8f5] shadow-[0_8px_30px_rgba(0,0,0,0.85),0_0_20px_rgba(221,107,77,0.35)] hover:border-[#dd6b4d] hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center relative group"
+            title="Hap Starwebs AI Assistant"
+            aria-label="Open AI Assistant"
           >
-            <div className="flex items-center gap-1.5 font-medium">
-              <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
-              <span>WhatsApp: +383 48 881 191</span>
-            </div>
-            <span className="font-semibold underline flex items-center gap-0.5">
-              Chat Now <ExternalLink className="w-3 h-3" />
+            <Bot className="w-5 h-5 text-[#dd6b4d] group-hover:scale-110 transition-transform" />
+            
+            {/* Pulsating status dot in the upper corner */}
+            <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#dd6b4d] opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#dd6b4d] border-2 border-black" />
             </span>
-          </a>
+          </button>
+        </div>
+      )}
 
-          {/* Chat Messages Body */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs bg-[#0b0b0b]/60">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {msg.sender === 'ai' && (
-                  <div className="w-6 h-6 rounded-md bg-[#221816] border border-[#dd6b4d]/30 flex items-center justify-center text-[#dd6b4d] shrink-0 mt-0.5">
-                    <Bot className="w-3.5 h-3.5" />
+      {/* Expanded Glassmorphic Chat Window (When Open) */}
+      {isOpen && (
+        <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 print:hidden chatbot-widget">
+          <div className="w-[calc(100vw-1.5rem)] sm:w-[390px] h-[520px] max-h-[82vh] rounded-3xl bg-neutral-900/95 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.95),0_0_30px_rgba(221,107,77,0.25)] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+            {/* Header */}
+            <div className="p-3.5 sm:p-4 bg-[#140e0d] border-b border-white/[0.08] flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-[#dd6b4d]/40 shrink-0 bg-[#0d0908] p-0.5 shadow-inner">
+                  <img
+                    src="/assets/aistudio/logo_e0adced0.png"
+                    alt="STARWEBS AI Assistant"
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="font-display text-xs sm:text-sm font-bold text-[#fbf8f5]">
+                      Starwebs AI Assistant
+                    </h4>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]" />
                   </div>
-                )}
-                <div
-                  className={`p-3 rounded-xl max-w-[82%] leading-relaxed ${
-                    msg.sender === 'user'
-                      ? 'bg-[#dd6b4d] text-white font-medium rounded-br-none shadow-md'
-                      : 'bg-[#1c1513] border border-white/[0.08] text-[#fbf8f5] rounded-bl-none'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
-                  {msg.quickActions && (
-                    <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-wrap gap-1.5">
-                      {msg.quickActions.map((act, aIdx) => (
-                        <button
-                          key={aIdx}
-                          onClick={act.action}
-                          className="px-2.5 py-1 rounded bg-[#dd6b4d] text-white font-bold text-[10px] hover:bg-[#e57c61] transition-colors"
-                        >
-                          {act.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  <span
-                    className={`block text-[9px] mt-1 text-right font-mono-tabular ${
-                      msg.sender === 'user' ? 'text-white/70' : 'text-[#b3a8a2]'
-                    }`}
-                  >
-                    {msg.timestamp}
+                  <span className="text-[10px] text-[#b3a8a2] block">
+                    Çmimet, Afatet & Mbështetje për Demo
                   </span>
                 </div>
               </div>
-            ))}
 
-            {isLoading && (
-              <div className="flex gap-2.5 justify-start items-center text-[#b3a8a2] text-xs">
-                <div className="w-6 h-6 rounded-md bg-[#221816] flex items-center justify-center text-[#dd6b4d]">
-                  <Bot className="w-3.5 h-3.5" />
-                </div>
-                <div className="p-2.5 rounded-xl bg-[#1c1513] border border-white/[0.08] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-bounce" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-bounce [animation-delay:0.2s]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-bounce [animation-delay:0.4s]" />
-                </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setMessages(initialMessages)}
+                  title="Rifillo bisedën"
+                  className="p-1.5 rounded-lg text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.06] transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  title="Mbyll Assistant-in"
+                  className="p-1.5 rounded-lg text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.06] transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+            </div>
 
-          {/* Quick Question Chips */}
-          <div className="px-3 py-2 bg-[#171211] border-t border-white/[0.06] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-            {quickPrompts.map((prompt, pIdx) => (
-              <button
-                key={pIdx}
-                onClick={() => handleSendPrompt(prompt)}
-                className="px-2.5 py-1 rounded-full bg-[#0b0b0b] border border-white/[0.08] text-[10px] text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/50 whitespace-nowrap shrink-0 transition-colors cursor-pointer"
-              >
-                {prompt}
-              </button>
-            ))}
-          </div>
-
-          {/* Input Form */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendPrompt(inputText);
-            }}
-            className="p-3 bg-[#171211] border-t border-white/[0.08] flex items-center gap-2"
-          >
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ask about website pricing, timeline..."
-              className="flex-1 px-3 py-2 rounded-lg bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d] transition-all"
-            />
-            <button
-              type="submit"
-              disabled={!inputText.trim() || isLoading}
-              className="p-2 rounded-lg bg-[#dd6b4d] text-white hover:bg-[#e57c61] disabled:opacity-50 transition-colors cursor-pointer"
+            {/* Quick WhatsApp Header Bar */}
+            <a
+              href="https://wa.me/38348881191"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-emerald-950/40 border-b border-emerald-500/20 flex items-center justify-between text-[11px] text-emerald-300 hover:bg-emerald-950/60 transition-colors"
             >
-              <Send className="w-4 h-4" />
-            </button>
-          </form>
+              <div className="flex items-center gap-1.5 font-medium font-mono-tabular">
+                <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
+                <span>WhatsApp: +383 48 881 191</span>
+              </div>
+              <span className="font-semibold underline flex items-center gap-0.5">
+                Bisedo Direkt <ExternalLink className="w-3 h-3" />
+              </span>
+            </a>
+
+            {/* Chat Messages Body */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs bg-[#0b0b0b]/60">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  {msg.sender === 'ai' && (
+                    <div className="w-6 h-6 rounded-md bg-[#221816] border border-[#dd6b4d]/30 flex items-center justify-center text-[#dd6b4d] shrink-0 mt-0.5">
+                      <Bot className="w-3.5 h-3.5" />
+                    </div>
+                  )}
+                  <div
+                    className={`p-3 rounded-2xl max-w-[85%] leading-relaxed ${
+                      msg.sender === 'user'
+                        ? 'bg-[#dd6b4d] text-white font-medium rounded-br-none shadow-md'
+                        : 'bg-neutral-900/90 border border-white/[0.08] text-[#fbf8f5] rounded-bl-none'
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                    {msg.quickActions && (
+                      <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-wrap gap-1.5">
+                        {msg.quickActions.map((act, aIdx) => (
+                          <button
+                            key={aIdx}
+                            onClick={act.action}
+                            className="px-2.5 py-1 rounded-lg bg-[#dd6b4d] text-white font-bold text-[10px] hover:bg-[#e57c61] transition-colors cursor-pointer"
+                          >
+                            {act.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <span
+                      className={`block text-[9px] mt-1 text-right font-mono-tabular ${
+                        msg.sender === 'user' ? 'text-white/70' : 'text-[#b3a8a2]'
+                      }`}
+                    >
+                      {msg.timestamp}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {isLoading && (
+                <div className="flex gap-2.5 justify-start items-center text-[#b3a8a2] text-xs">
+                  <div className="w-6 h-6 rounded-md bg-[#221816] flex items-center justify-center text-[#dd6b4d]">
+                    <Bot className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-neutral-900 border border-white/[0.08] flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-bounce" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-bounce [animation-delay:0.2s]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] animate-bounce [animation-delay:0.4s]" />
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Quick Question Chips */}
+            <div className="px-3 py-2 bg-[#140e0d] border-t border-white/[0.06] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              {quickPrompts.map((prompt, pIdx) => (
+                <button
+                  key={pIdx}
+                  onClick={() => handleSendPrompt(prompt)}
+                  className="px-2.5 py-1 rounded-full bg-[#0b0b0b] border border-white/[0.08] text-[10px] text-[#b3a8a2] hover:text-[#fbf8f5] hover:border-[#dd6b4d]/50 whitespace-nowrap shrink-0 transition-colors cursor-pointer"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+
+            {/* Input Form */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendPrompt(inputText);
+              }}
+              className="p-3 bg-[#140e0d] border-t border-white/[0.08] flex items-center gap-2"
+            >
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Shkruaj pyetjen tuaj për uebfaqe, çmime..."
+                className="flex-1 px-3 py-2 rounded-xl bg-[#0b0b0b] border border-white/[0.1] text-xs text-[#fbf8f5] focus:outline-none focus:border-[#dd6b4d] transition-all"
+              />
+              <button
+                type="submit"
+                disabled={!inputText.trim() || isLoading}
+                className="p-2 rounded-xl bg-[#dd6b4d] text-white hover:bg-[#e57c61] disabled:opacity-50 transition-colors cursor-pointer"
+                title="Dërgo mesazhin"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </form>
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 };

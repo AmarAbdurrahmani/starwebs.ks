@@ -133,7 +133,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     client: 'Eave Acoustic Labs',
     category: 'Product Showcase',
     year: '2025',
-    imageUrl: '/assets/aistudio/image_8989395a.png',
+    imageUrl: '/assets/aistudio/Gemini_Generated_Image_jpv2qcjpv2qcjpv2_ef0a29e4.jpg',
     description: 'Faqe prezantuese luksoze për dëgjuese & pajisje premium audio me kontrast të lartë UI/UX, pamje editoriale dhe arkitekturë akustike interaktive.',
     keyOutcomes: [
       { metric: '+74%', label: 'Avg Dwell Time' },
@@ -175,7 +175,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     client: 'VisionWarp Systems',
     category: 'Tech & Innovation',
     year: '2025',
-    imageUrl: '/assets/aistudio/image_cf5b4fb1.png',
+    imageUrl: '/assets/aistudio/Gemini_Generated_Image_jpv2qcjpv2qcjpv2__1__b1afee03.jpg',
     description: 'Portal teknologjik me renderime 3D për pajisje të realitetit virtual, telemetri të performancës në kohë reale dhe modul për rezervime hardware.',
     keyOutcomes: [
       { metric: '120 FPS', label: 'Interactive 3D Render' },

@@ -8,8 +8,8 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) => {
   return (
-    <footer className="w-full bg-[#0b0b0b] border-t border-white/[0.08] text-[#b3a8a2] py-16 px-6 lg:px-12">
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
+    <footer className="w-full bg-[#0b0b0b] border-t border-white/[0.08] text-[#b3a8a2] py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-12">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 mb-14">
         {/* Brand & Mission & Social */}
         <div className="md:col-span-5 space-y-4">
           <a
@@ -18,9 +18,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
               e.preventDefault();
               onNavigate('overview');
             }}
-            className="font-display text-2xl font-extrabold tracking-tight text-[#fbf8f5] inline-flex items-center gap-1.5"
+            className="font-display text-2xl font-extrabold tracking-tight text-[#fbf8f5] inline-flex items-center gap-2.5 group"
           >
-            <span>STARWEBS.KS</span>
+            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#dd6b4d]/40 shadow-[0_0_10px_rgba(221,107,77,0.3)] shrink-0 bg-[#140e0d] p-0.5 transition-transform duration-300 group-hover:scale-105">
+              <img
+                src="/assets/aistudio/logo_e0adced0.png"
+                alt="STARWEBS.KS Logo"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <span>STARWEBS<span className="text-[#dd6b4d]">.KS</span></span>
             <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d]" />
           </a>
           <p className="font-body text-xs text-[#b3a8a2] max-w-sm leading-relaxed">
@@ -179,6 +186,33 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
           <span>·</span>
           <span>WhatsApp: +383 48 881 191</span>
         </div>
+      </div>
+
+      {/* Signature Bar: Designed & Engineered by amarabdurrahmani.com & shend.dev */}
+      <div className="max-w-[1440px] mx-auto pt-6 mt-6 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 font-mono-tabular tracking-wide gap-3">
+        <p className="text-center sm:text-left">
+          Designed & Engineered by{' '}
+          <a
+            href="https://amarabdurrahmani.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-neutral-400 hover:text-[#ff9d82] transition-colors underline decoration-white/20 underline-offset-4 font-medium"
+          >
+            amarabdurrahmani.com
+          </a>{' '}
+          &{' '}
+          <a
+            href="https://shend.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-neutral-400 hover:text-[#ff9d82] transition-colors underline decoration-white/20 underline-offset-4 font-medium"
+          >
+            shend.dev
+          </a>
+        </p>
+        <span className="text-[11px] text-neutral-600 hidden sm:inline">
+          Prishtinë, Republic of Kosovo · High-Performance Web Architecture
+        </span>
       </div>
     </footer>
   );
