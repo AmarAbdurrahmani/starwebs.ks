@@ -112,6 +112,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
                 Contact & Custom Quote
               </button>
             </li>
+            <li>
+              <button
+                onClick={() => onNavigate('faq')}
+                className="hover:text-[#ff9d82] transition-colors cursor-pointer text-left flex items-center gap-1.5 text-[#fbf8f5] font-medium"
+              >
+                <span>Pyetjet e Shpeshta (FAQ)</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d]" />
+              </button>
+            </li>
           </ul>
         </div>
 
@@ -174,6 +183,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenFreeDemo }) =>
         <p>© {new Date().getFullYear()} starwebs.ks Digital Engineering Agency. All rights reserved.</p>
         <div className="flex flex-wrap items-center gap-3">
           <span>Biznes i Regjistruar në ARBK</span>
+          <span>·</span>
+          <button
+            onClick={() => onNavigate('faq')}
+            className="text-[#ff9d82] hover:underline cursor-pointer"
+          >
+            Pyetjet e Shpeshta (FAQ)
+          </button>
           <span>·</span>
           <a 
             href="https://superpuna.rks-gov.net/job-seeker/employer/starwebs-ks" 

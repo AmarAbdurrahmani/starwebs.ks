@@ -142,6 +142,17 @@ export const TopBar: React.FC<TopBarProps> = ({
                 {activeSection === item.id && <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d]" />}
               </button>
             ))}
+            <button
+              onClick={() => handleNavClick('faq')}
+              className={`text-left px-3 py-2.5 rounded-lg text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-between ${
+                activeSection === 'faq'
+                  ? 'bg-[#dd6b4d]/15 text-[#ff9d82] border-l-2 border-[#dd6b4d]'
+                  : 'text-[#ff9d82] hover:text-[#fbf8f5] hover:bg-white/5'
+              }`}
+            >
+              <span>Pyetjet e Shpeshta (FAQ)</span>
+              {activeSection === 'faq' && <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d]" />}
+            </button>
           </nav>
 
           <div className="pt-3 border-t border-white/10 flex flex-col gap-2.5">

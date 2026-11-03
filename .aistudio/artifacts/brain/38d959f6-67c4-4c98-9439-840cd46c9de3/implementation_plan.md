@@ -1,57 +1,85 @@
-# Implementation Plan: Official Logo Integration & Mobile-First Optimization
+# Minimalist Architecture: Dedicated FAQ View & Clean Landing Page
 
-Integrate the official STARWEBS.KS agency circular emblem (`/assets/aistudio/logo_e0adced0.png`) across the digital touchpoints and implement full mobile-first optimizations for seamless responsiveness, navigation, and readability.
+Architectural blueprint for refining **starwebs.ks** into an ultra-minimalist, high-performance landing page while establishing a dedicated, full-page Obsidian Dark FAQ view (`#faq`) accessible via an elegant link in the footer.
 
----
+***
 
-## User Review Required
+### User Review & Critical Decisions
 
-> [!NOTE]
-> Based on your selections:
-> 1. **Header Logo**: Circular emblem with crisp STARWEBS wordmark next to it in a unified luxury glass badge.
-> 2. **AI Chatbot on Mobile**: Compact bottom-right floating trigger with safe spacing above mobile edges (`bottom-4 right-4 sm:bottom-6 sm:right-6`) and full-screen backdrop blur (`backdrop-blur-md bg-black/70`) when open.
+> [!IMPORTANT]
+> **Confirmed Choices from Phase 1 Clarification:**
+> - **View Presentation**: Dedicated full-page view with top return button and synchronized browser URL hash (`#faq`).
+> - **Footer Navigation Label**: `Pyetjet e Shpeshta (FAQ)` located under the agency navigation directory.
+> - **State & URL Synchronization**: Seamless dual-mode routing supporting direct hash navigation (`#faq`, `#overview`, etc.) and browser back/forward buttons without third-party router overhead.
 
----
+***
 
-## Proposed Changes
+### 1. Overview & Core Concept
 
-### 1. Navigation Header & Mobile Menu (`src/components/TopBar.tsx`)
-- **Official Brand Mark**: Embed the circular emblem (`/assets/aistudio/logo_e0adced0.png`, 36px height) with rounded luxury framing alongside the crisp `STARWEBS.KS` typography and glowing obsidian accent dot.
-- **Mobile Hamburger Navigation**: 
-  - Add an intuitive mobile hamburger toggle (`Menu` / `X` icon) visible on `< lg` screens.
-  - Render an animated glassmorphic slide-out / drawer menu with `bg-neutral-950/95 backdrop-blur-xl border-b border-white/10`.
-  - Provide direct mobile navigation buttons (Overview, Services, Portfolio, Case Studies, Contact) + "Kërko Demo Falas" CTA.
+- **What It Does**: Strips any lingering informational clutter and redundant text walls from the main landing page, ensuring generous whitespace and obsidian luxury aesthetic focused on services and portfolio. Moves in-depth client questions into a dedicated `FAQView` component equipped with categorised accordions, live question search, and direct contact hooks (WhatsApp and Free Demo).
+- **Target Audience**: Ambitious enterprise clients, founders, and e-commerce directors seeking clarity on development processes, pricing tiers, SLAs, and technical standards without cluttering their initial landing visual journey.
+- **Key Value**: Preserves elite landing page conversions and mobile scroll fluidity while giving inquisitive prospects an organized, comprehensive resource for answers.
 
-### 2. Agency Footer & Booking Voucher (`src/components/Footer.tsx` & `src/components/FreeDemoModal.tsx`)
-- **Footer**: Place the official emblem next to the agency brand title in the primary brand column with quick ARBK and Superpuna trust verification links.
-- **Booking Voucher Slip (`FreeDemoModal.tsx`)**: Replace generic placeholder with the official circular logo in the top voucher header and printable slip (`max-w-[70px]` high-DPI display with "STARWEBS.KS - Digital Engineering Agency" letterhead).
+***
 
-### 3. Responsive Spacing & Layout Harmonization
-- **Hero Section (`src/components/HeroSection.tsx`)**:
-  - Adjust mobile padding from `py-20` down to `pt-24 pb-12 px-4 sm:px-6` to avoid empty screen bulk.
-  - Scale typography cleanly (`text-3xl sm:text-5xl lg:text-6xl`) with controlled line-height to prevent word clipping.
-  - Ensure stats cards and action buttons wrap effortlessly on narrow screens (iPhone SE / 360px+).
-- **Portfolio Bento Grid (`src/components/PortfolioShowcase.tsx`)**:
-  - Ensure single-column stacking (`grid-cols-1 md:grid-cols-12`) on mobile with 16:9 cinematic framing and zero horizontal overflow.
-  - Refine modal image inspector controls for touch devices (compact close and zoom toggles).
-- **Trust & Verification Section (`src/components/TrustVerificationSection.tsx`)**:
-  - Tighten container paddings (`py-12 sm:py-20 px-4 sm:px-8`) and ensure ARBK & Superpuna badge cards stack neatly in 1 column on mobile screens.
+### 2. User Experience & Visual Design
 
-### 4. AI Chatbot Widget Mobile Isolation (`src/components/ChatbotWidget.tsx`)
-- **Compact Trigger**: Position with mobile safe area padding (`bottom-4 right-4 sm:bottom-6 sm:right-6`) so it never collides with sticky elements or bottom bars.
-- **Mobile Full Backdrop Overlay**: When open, render a full-screen `fixed inset-0 bg-black/70 backdrop-blur-md z-40` isolating the chat interface from background noise.
-- **Responsive Chat Window Dimensions**: Ensure the chat modal fits within `w-[calc(100vw-2rem)] sm:w-[420px]` and `max-h-[82vh] sm:max-h-[640px]`, with sticky header and mobile-friendly tap targets.
+- **Landing Page Minimalism**:
+  - The landing page flows cleanly: *Hero & Speed Engine → High Impact Stats → Services Grid & Quote Calculator → Portfolio Showcase & Live Frames → Tech Stack → Case Studies → ARBK Trust Verification → Contact*.
+  - Whitespace padding remains generous (`py-20 sm:py-28 lg:py-36`) with subtle ambient neon glows (`#dd6b4d` burnt copper and vivid cyan).
+- **Dedicated FAQ View Experience (`#faq`)**:
+  - **Header & Navigation Bar**: Top navigation bar persists seamlessly. Includes an immediate prominent "← Kthehu në Ballinë" (Return to Home) button with breadcrumb navigation.
+  - **Hero Header**: Atmospheric title *"Pyetjet e Shpeshta & Standardet e Zhvillimit"* with an interactive live search bar to quickly filter answers by keyword (e.g. *çmimi, afati, e-commerce, kodi, siguria*).
+  - **Categorized Luxury Accordions**:
+    1. *Çmimet & Preventivi* (Pricing, transparent fixed quotes, deposit structures).
+    2. *Afatet & Metodologjia* (Timelines from 2 to 6 weeks, expedited sprints, agile milestones).
+    3. *Arkitektura Teknike & Shpejtësia* (React 19, Next.js, sub-second load times, headless Shopify).
+    4. *ARBK, Kontratat & Ligjshmëria* (Official business registration, B2B contracts, invoices in Kosovo).
+    5. *Mirëmbajtja & Garancia* (Post-launch support, Core Web Vitals guarantees).
+  - **Direct Escalation Banner**: Bottom card allowing users to jump directly to WhatsApp (`+383 48 881 191`) or open the Free Demo booking modal if their question requires custom scoping.
+- **Footer Link**:
+  - Integrated into the `Agency Navigation` column as a dedicated button: `Pyetjet e Shpeshta (FAQ)`.
+  - Hover transition with burnt copper accent glow (`#ff9d82`) matching the obsidian luxury palette.
 
----
+***
 
-## Verification Plan
+### 3. Key Product Decisions & Trade-Offs
 
-### Automated Checks
-- Run `npm run build` / TypeScript verification (`compile_applet`) to ensure type safety, zero broken imports, and clean packaging.
-- Run `lint_applet` to check for syntax and lint cleanliness.
+- **View Routing Strategy (URL Hash vs. External Router Library)**:
+  - *Chosen Approach*: Lightweight hash-based view controller (`window.location.hash === '#faq'` paired with React state `currentView: 'home' | 'faq'`).
+  - *Why*: Eliminates the need to install heavy external router dependencies (keeping Vite bundle size under 150kB for 99+ mobile speed score) while still supporting bookmarkable URLs, direct link sharing, and native browser back-button navigation.
+- **FAQ Data Architecture**:
+  - *Chosen Approach*: Modular data file `src/data/faqData.ts` exporting strongly-typed question/answer items grouped by category tags.
+  - *Why*: Keeps components pure and maintainable, easily editable by agency founders without touching rendering logic.
 
-### Manual Verification
-- Test navbar hamburger toggle behavior on mobile viewport widths (375px, 414px) and ensure desktop view remains uncluttered.
-- Verify that `/assets/aistudio/logo_e0adced0.png` renders sharply in header, footer, and printable voucher slip.
-- Verify chatbot trigger position and backdrop blur overlay activation on mobile screen preview.
-- Confirm zero horizontal scroll or clipped headings across all breakpoints.
+***
+
+### 4. Technical Architecture & Data Strategy
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                              App.tsx                                   │
+│            State: currentView ('home' | 'faq'), hash listener          │
+└───────────────┬────────────────────────────────────────┬───────────────┘
+                │                                        │
+     [currentView === 'home']                 [currentView === 'faq']
+                │                                        │
+                ▼                                        ▼
+┌───────────────────────────────┐        ┌───────────────────────────────┐
+│     Main Landing Experience   │        │           FAQView             │
+│  - HeroSection                │        │  - Breadcrumb & Back Button   │
+│  - HighImpactStatsBar         │        │  - Search / Category Filter   │
+│  - ServicesSection            │        │  - Luxury Accordion Cards     │
+│  - PortfolioShowcase          │        │  - WhatsApp & Demo Escalation │
+│  - TechStackGrid              │        └───────────────────────────────┘
+│  - CaseStudiesSection         │                        ▲
+│  - TrustVerificationSection   │                        │
+│  - ContactSection             │                        │
+│  - Footer (with FAQ link) ────┼────────────────────────┘
+└───────────────────────────────┘
+```
+
+- **Interactive State Transitions**:
+  - Clicking `Pyetjet e Shpeshta (FAQ)` in the footer sets `currentView('faq')`, updates `window.location.hash = '#faq'`, and scrolls smoothly to top.
+  - Clicking "Kthehu në Ballinë" or selecting any section in the top navigation returns to `home` and scrolls to the selected anchor.
+  - Native `window.addEventListener('hashchange', ...)` ensures back/forward browser gestures work naturally.
