@@ -14,7 +14,8 @@ import {
   VolumeX, 
   Radio, 
   AlertCircle,
-  Square
+  Square,
+  Check
 } from 'lucide-react';
 
 interface ChatMessage {
@@ -53,12 +54,14 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const silenceTimeoutRef = useRef<any>(null);
+  const latestTranscriptRef = useRef<string>('');
 
   const initialMessages: ChatMessage[] = [
     {
       id: 'welcome',
       sender: 'ai',
-      text: "👋 Përshëndetje! Jam **Starwebs AI Assistant**. Mund t'ju ndihmoj me çmimet e faqeve, afatet e dorëzimit, dyqanet e-commerce apo rezervimin e një demoje falas për **starwebs.ks**.",
+      text: "👋 Përshëndetje! Jam **Starwebs AI Assistant**. Mund t'ju ndihmoj me çmimet fikse të faqeve, afatet e dorëzimit, dyqanet e-commerce apo rezervimin e një demoje falas për **starwebs.ks**.",
       timestamp: 'Tani'
     }
   ];
@@ -68,7 +71,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     {
       id: 'voice-welcome',
       sender: 'ai',
-      text: "Përshëndetje! Jam Asistenti me Zë. Prekni butonin e mikrofonit për të dhënë leje dhe flisni lirshëm me zë.",
+      text: "Përshëndetje! Jam Asistenti me Zë. Prekni butonin e mikrofonit dhe flisni lirshëm. Mund të flisni me pauza dhe të shtypni 'Dërgo zërin kur të jem gati'.",
       timestamp: 'Tani'
     }
   ]);
@@ -150,7 +153,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
       }
 
       const data = await response.json();
-      const aiReply = data.reply || "Faleminderit që kontaktuat starwebs.ks! Mund të na shkruani direkt në WhatsApp në +383 48 881 191.";
+      const aiReply = data.reply || "Faleminderit që kontaktuat starwebs.ks! Si mund t'ju ndihmojmë më tej?";
 
       setMessages((prev) => [
         ...prev,
@@ -170,11 +173,13 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
       ]);
     } catch (error) {
       console.warn('Chat request failed, providing high-fidelity fallback:', error);
-      let fallbackText = "Faleminderit për pyetjen! Tek starwebs.ks ndërtojmë uebfaqe me shpejtësi nën 800ms dhe arkitekturë moderne React 19.";
-      if (textToSend.toLowerCase().includes('çmim') || textToSend.toLowerCase().includes('kushton')) {
+      let fallbackText = "Tek starwebs.ks ndërtojmë uebfaqe me shpejtësi nën 800ms dhe arkitekturë moderne React 19.";
+      if (textToSend.toLowerCase().includes('çmim') || textToSend.toLowerCase().includes('kushton') || textToSend.toLowerCase().includes('price')) {
         fallbackText = "Çmimet tona nisin nga €2,900 për optimizime mobile-first, €3,800 për aplikacione ueb me porosi, dhe €5,200 për dyqane headless e-commerce me pagesa automatike.";
-      } else if (textToSend.toLowerCase().includes('afat') || textToSend.toLowerCase().includes('zgjat')) {
+      } else if (textToSend.toLowerCase().includes('afat') || textToSend.toLowerCase().includes('zgjat') || textToSend.toLowerCase().includes('kohe')) {
         fallbackText = "Projektet tona dorëzohen mes 2 deri në 4 javë për landing faqe me konvertim të lartë, dhe 4 deri në 8 javë për platforma të plota me porosi.";
+      } else if (textToSend.toLowerCase().includes('demo')) {
+        fallbackText = "Demoja jonë falas përfshin auditimin e shpejtësisë dhe një prototip fillestar UI brenda 48 orëve, pa asnjë obligim financiar.";
       }
 
       setMessages((prev) => [
@@ -229,6 +234,11 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
 
   // Send query to voice backend
   const handleSendVoiceQuery = async (queryText: string) => {
+    if (silenceTimeoutRef.current) {
+      clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
+
     const textToSend = queryText.trim();
     if (!textToSend || isVoiceThinking) return;
 
@@ -241,6 +251,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
 
     setVoiceMessages((prev) => [...prev, userMessage]);
     setVoiceTranscript('');
+    latestTranscriptRef.current = '';
     setIsVoiceThinking(true);
     stopListening();
 
@@ -257,8 +268,8 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
 
       const data = await res.json();
       const reply = data.reply || (voiceLanguage === 'en'
-        ? "We build bespoke high-performance websites. Would you like a free demo or WhatsApp consultation?"
-        : "Ne ndërtojmë uebfaqe me porosi dhe shpejtësi të lartë. Dëshironi një demo falas apo konsultim në WhatsApp?");
+        ? "We build bespoke high-performance websites. Would you like a free demo or consultation?"
+        : "Ne ndërtojmë uebfaqe me porosi dhe shpejtësi të lartë. Dëshironi një demo falas apo ofertë teknike?");
 
       const aiMessage: ChatMessage = {
         id: 'voice-ai-' + Date.now(),
@@ -273,8 +284,8 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     } catch (err) {
       console.warn('Voice chat API error:', err);
       const fallback = voiceLanguage === 'en'
-        ? "Welcome to starwebs.ks! Our engineering team is ready to assist you on WhatsApp (+383 48 881 191)."
-        : "Mirësevini në starwebs.ks! Ekipi ynë inxhinierik është gati t'ju ndihmojë në WhatsApp (+383 48 881 191).";
+        ? "Welcome to starwebs.ks! Our engineering team crafts websites with sub-second speeds starting at €2,900."
+        : "Mirësevini në starwebs.ks! Çmimet tona nisin nga €2,900 për optimizime dhe €3,800 për aplikacione ueb me porosi.";
 
       setVoiceMessages((prev) => [
         ...prev,
@@ -323,9 +334,11 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     }
   };
 
-  // Robust Web Speech Recognition + getUserMedia Permission
+  // Robust Web Speech Recognition with CONTINUOUS listening + generous silence debounce
   const startListening = async () => {
     setMicError(null);
+    setVoiceTranscript('');
+    latestTranscriptRef.current = '';
     stopSpeaking();
 
     // 1. Explicitly request microphone permission via getUserMedia
@@ -339,7 +352,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
       console.warn('Microphone permission denied or unavailable:', permErr);
       setMicError(
         permErr.name === 'NotAllowedError' || permErr.name === 'PermissionDeniedError'
-          ? "Leja për mikrofon u refuzua. Ju lutem aktivizoni qasjen në cilësimet e shfletuesit."
+          ? "Leja për mikrofon u refuzua. Ju lutem aktivizoni qasjen te cilësimet e shfletuesit."
           : "Nuk u gjet mikrofon aktiv në pajisjen tuaj."
       );
       setIsListening(false);
@@ -356,13 +369,13 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     }
 
     try {
-      // Abort previous instance if any
       if (recognitionRef.current) {
         try { recognitionRef.current.abort(); } catch (e) {}
       }
 
       const recognition = new SpeechRecognition();
-      recognition.continuous = false;
+      // CONTINUOUS is true so natural pauses do not immediately disconnect or cut off user
+      recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = voiceLanguage === 'sq' ? 'sq-AL' : 'en-US';
 
@@ -372,13 +385,31 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
       };
 
       recognition.onresult = (event: any) => {
-        let currentTranscript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          currentTranscript += event.results[i][0].transcript;
+        let interimText = '';
+        let finalizedText = '';
+
+        for (let i = 0; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalizedText += event.results[i][0].transcript + ' ';
+          } else {
+            interimText += event.results[i][0].transcript;
+          }
         }
-        setVoiceTranscript(currentTranscript);
-        if (event.results[0].isFinal && currentTranscript.trim()) {
-          handleSendVoiceQuery(currentTranscript);
+
+        const fullText = (finalizedText + interimText).trim();
+        if (fullText) {
+          setVoiceTranscript(fullText);
+          latestTranscriptRef.current = fullText;
+
+          // Generous silence threshold: 3500ms after last word before auto-submitting
+          if (silenceTimeoutRef.current) {
+            clearTimeout(silenceTimeoutRef.current);
+          }
+          silenceTimeoutRef.current = setTimeout(() => {
+            if (latestTranscriptRef.current.trim()) {
+              handleSendVoiceQuery(latestTranscriptRef.current);
+            }
+          }, 3500);
         }
       };
 
@@ -386,15 +417,23 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
         console.warn('SpeechRecognition error:', event.error);
         if (event.error === 'not-allowed') {
           setMicError("Leja për mikrofon u refuzua. Ju lutem lejoni qasjen te shfletuesi.");
+          stopListening();
         } else if (event.error === 'no-speech') {
-          // Normal timeout if user was silent
-          setMicError("Nuk u dëgjua zë. Prekni përsëri mikrofonin dhe flisni.");
+          // Keep listening unless user manually stops or errors out
         }
-        stopListening();
       };
 
       recognition.onend = () => {
-        stopListening();
+        // If still flagged as listening (e.g. browser restarted recognition), restart smoothly
+        if (isListening && recognitionRef.current) {
+          try {
+            recognitionRef.current.start();
+          } catch (e) {
+            stopListening();
+          }
+        } else {
+          stopListening();
+        }
       };
 
       recognitionRef.current = recognition;
@@ -407,6 +446,11 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
   };
 
   const stopListening = () => {
+    if (silenceTimeoutRef.current) {
+      clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
+
     setIsListening(false);
     setAudioLevel(0);
 
@@ -431,9 +475,26 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     }
   };
 
+  // Submit voice when user is ready
+  const submitVoiceWhenReady = () => {
+    const textToSend = latestTranscriptRef.current.trim() || voiceTranscript.trim();
+    if (textToSend) {
+      handleSendVoiceQuery(textToSend);
+    } else {
+      stopListening();
+    }
+  };
+
+  const cancelVoiceListening = () => {
+    stopListening();
+    setVoiceTranscript('');
+    latestTranscriptRef.current = '';
+    setMicError(null);
+  };
+
   const toggleListening = () => {
     if (isListening) {
-      stopListening();
+      submitVoiceWhenReady();
     } else {
       startListening();
     }
@@ -506,7 +567,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
       {/* EXPANDED GLASSMORPHIC CHAT & VOICE WINDOW */}
       {isOpen && (
         <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 print:hidden chatbot-widget">
-          <div className="w-[calc(100vw-1.5rem)] sm:w-[410px] h-[560px] max-h-[86vh] rounded-3xl bg-[#0f0a09]/95 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(221,107,77,0.3)] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+          <div className="w-[calc(100vw-1.5rem)] sm:w-[410px] h-[570px] max-h-[86vh] rounded-3xl bg-[#0f0a09]/95 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(221,107,77,0.3)] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
             {/* Specular top border */}
             <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-[#dd6b4d] to-transparent" />
 
@@ -806,7 +867,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
                           ? 'bg-[#dd6b4d] text-white shadow-[0_0_25px_rgba(221,107,77,0.8)]'
                           : 'bg-gradient-to-tr from-[#1a100e] to-[#2b1713] border border-[#dd6b4d]/40 text-[#ff9d82] hover:scale-105 hover:border-[#dd6b4d]'
                       }`}
-                      title={isListening ? 'Ndalo dëgjimin' : 'Prekni për të folur me mikrofon'}
+                      title={isListening ? 'Kliko për të dërguar zërin' : 'Prekni për të folur me mikrofon'}
                     >
                       {isListening ? (
                         <MicOff className="w-7 h-7 animate-pulse" />
@@ -839,6 +900,28 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
                     ))}
                   </div>
 
+                  {/* Action Button: Dërgo zërin kur të jem gati */}
+                  {isListening && (
+                    <div className="flex items-center justify-center gap-2 mt-3 animate-in fade-in duration-200">
+                      <button
+                        onClick={submitVoiceWhenReady}
+                        disabled={!voiceTranscript.trim()}
+                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#dd6b4d] to-[#e87756] hover:from-[#e87756] hover:to-[#ff9d82] text-white text-xs font-bold shadow-[0_0_15px_rgba(221,107,77,0.5)] disabled:opacity-40 transition-all flex items-center gap-1.5 cursor-pointer"
+                        title="Dërgo fjalinë e regjistruar tani"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Dërgo zërin kur të jem gati</span>
+                      </button>
+                      <button
+                        onClick={cancelVoiceListening}
+                        className="px-2.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-[#b3a8a2] hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+                        title="Anulo regjistrimin"
+                      >
+                        Anulo
+                      </button>
+                    </div>
+                  )}
+
                   {/* Status Text Indicator */}
                   <div className="mt-2 text-center px-4">
                     {micError ? (
@@ -849,7 +932,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
                     ) : isListening ? (
                       <p className="text-emerald-400 text-xs font-semibold flex items-center justify-center gap-1.5">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                        <span>{voiceTranscript ? `"${voiceTranscript}"` : 'Po dëgjoj, flisni tani...'}</span>
+                        <span>{voiceTranscript ? `"${voiceTranscript}"` : 'Po dëgjoj... mund të flisni pa u ngutur'}</span>
                       </p>
                     ) : isSpeaking ? (
                       <p className="text-[#ff9d82] text-xs font-semibold flex items-center justify-center gap-1.5">
@@ -859,7 +942,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
                     ) : isVoiceThinking ? (
                       <p className="text-[#dd6b4d] text-xs font-semibold flex items-center justify-center gap-1.5">
                         <Radio className="w-3.5 h-3.5 animate-spin" />
-                        <span>Duke menduar me Gemini...</span>
+                        <span>Duke përpunuar përgjigjen me AI...</span>
                       </p>
                     ) : (
                       <p className="text-[#b3a8a2] text-xs">
@@ -883,7 +966,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
                             : 'bg-neutral-900/90 border border-white/[0.08] text-[#fbf8f5] rounded-bl-none'
                         }`}
                       >
-                        <p>{vMsg.text}</p>
+                        <p className="whitespace-pre-wrap">{vMsg.text}</p>
                         {vMsg.quickActions && (
                           <div className="mt-2 pt-1.5 border-t border-white/10 flex flex-wrap gap-1.5">
                             {vMsg.quickActions.map((act, idx) => (
