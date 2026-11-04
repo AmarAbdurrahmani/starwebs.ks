@@ -185,7 +185,7 @@ export default function App() {
         onOpenDemoRequest={handleOpenFreeDemoDefault}
       />
 
-      {/* Floating Interactive AI Chatbot Widget (Starwebs AI Assistant) */}
+      {/* Single Unified Floating Interactive AI Assistant (Text & Voice AI) */}
       <ChatbotWidget
         onOpenDemo={handleOpenFreeDemoDefault}
       />

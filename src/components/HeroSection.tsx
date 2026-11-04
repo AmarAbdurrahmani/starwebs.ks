@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, Gauge, Zap, Smartphone, ShieldCheck, CheckCircle2, MessageCircle, Instagram } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Hero3DScene } from './Hero3DScene';
 
 interface HeroSectionProps {
   onOpenFreeDemo: () => void;
@@ -17,6 +18,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section id="overview" className="relative pt-8 sm:pt-14 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-12 max-w-[1440px] mx-auto overflow-hidden">
+      {/* Three.js 3D Obsidian Monolith Scene with Amber Core */}
+      <Hero3DScene />
+
       {/* Subtle atmospheric burnt orange glow in background */}
       <div
         className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[760px] h-[420px] rounded-full pointer-events-none opacity-30 blur-[140px]"

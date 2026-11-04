@@ -1,85 +1,50 @@
-# Minimalist Architecture: Dedicated FAQ View & Clean Landing Page
+# Implementation Plan: Gemini Voice Conversations & Three.js 3D Hero Scene
 
-Architectural blueprint for refining **starwebs.ks** into an ultra-minimalist, high-performance landing page while establishing a dedicated, full-page Obsidian Dark FAQ view (`#faq`) accessible via an elegant link in the footer.
+Integrate a real-time Voice Conversation experience with Gemini for starwebs.ks and a lightweight, high-performance Three.js 3D obsidian crystal monolith scene in the Hero section.
 
-***
+## User Preferences & Selected Directives
+- **Voice Conversations UI**: Floating voice pill in the bottom-right corner that expands into a luxury obsidian audio orb modal with live frequency visualizations and spoken audio playback.
+- **Three.js 3D Hero Scene**: Obsidian crystal monolith with rotating amber core, orbital metallic shards, and subtle floating ember particles. Automatically disabled on mobile screens (<768px) and low-power devices for sub-second page performance.
 
-### User Review & Critical Decisions
+---
 
-> [!IMPORTANT]
-> **Confirmed Choices from Phase 1 Clarification:**
-> - **View Presentation**: Dedicated full-page view with top return button and synchronized browser URL hash (`#faq`).
-> - **Footer Navigation Label**: `Pyetjet e Shpeshta (FAQ)` located under the agency navigation directory.
-> - **State & URL Synchronization**: Seamless dual-mode routing supporting direct hash navigation (`#faq`, `#overview`, etc.) and browser back/forward buttons without third-party router overhead.
+## Proposed Changes
 
-***
+### 1. Dependencies & Infrastructure
+- Install `three` and `@types/three` via `install_applet_package`.
+- Ensure `@google/genai` on server side is configured for voice/chat processing with the Starwebs system prompt.
 
-### 1. Overview & Core Concept
+### 2. Three.js 3D Hero Scene (`src/components/Hero3DScene.tsx`)
+- Build a modular 3D scene conforming to the `threejs` skill:
+  - **Procedural Composite Model**: 5-part hierarchical `THREE.Group` consisting of:
+    1. Outer beveled obsidian prism monolith with faceted geometry and reflective dark PBR material (`roughness: 0.15`, `metalness: 0.85`).
+    2. Floating glowing amber core (`MeshStandardMaterial` with emissive `#dd6b4d` radiance).
+    3. Orbital counter-rotating brushed bronze ring (`TorusGeometry`).
+    4. Orbiting obsidian satellite crystal shards.
+    5. Ambient ember particle constellation (`Points` with custom procedural soft particle texture).
+  - **Studio Lighting**: Warm key directional light paired with cool subtle ambient light for dramatic edge illumination.
+  - **Performance & Mobile Optimization**:
+    - Automatic detection of mobile viewports (`window.innerWidth < 768` or touch devices) to bypass WebGL canvas rendering, preserving 100/100 Core Web Vitals and battery life.
+    - Damped mouse/cursor parallax tracking (`1 - Math.exp(-5 * dt)`).
+    - Full resource lifecycle cleanup on unmount (`geometry.dispose()`, `material.dispose()`, `renderer.dispose()`, `cancelAnimationFrame`).
+- Embed inside `src/components/HeroSection.tsx` in a non-blocking background layer (`pointer-events-none`), maintaining high contrast with the hero headline and CTA buttons.
 
-- **What It Does**: Strips any lingering informational clutter and redundant text walls from the main landing page, ensuring generous whitespace and obsidian luxury aesthetic focused on services and portfolio. Moves in-depth client questions into a dedicated `FAQView` component equipped with categorised accordions, live question search, and direct contact hooks (WhatsApp and Free Demo).
-- **Target Audience**: Ambitious enterprise clients, founders, and e-commerce directors seeking clarity on development processes, pricing tiers, SLAs, and technical standards without cluttering their initial landing visual journey.
-- **Key Value**: Preserves elite landing page conversions and mobile scroll fluidity while giving inquisitive prospects an organized, comprehensive resource for answers.
+### 3. Voice Conversations Component (`src/components/VoiceAssistantModal.tsx`)
+- Build a floating voice pill in the bottom-right corner:
+  - Sleek Obsidian Dark button with sound-wave icon, subtle amber pulse ring, and tooltip "Live Voice Assistant".
+- Interactive Audio Orb Modal:
+  - Canvas-based glowing audio visualizer with dynamic sine/frequency waves reflecting microphone input and audio output.
+  - Microphone access with permission handling, live speech detection, and volume meter.
+  - Real-time conversation loop:
+    - User speaks -> audio recorded / transcribed -> sent to backend `/api/voice-chat` or `/api/chat` powered by Gemini -> response spoken back with synthesized natural voice playback (`SpeechSynthesis` / audio playback).
+    - Real-time transcript display with turn-by-turn history.
+    - Quick action chips: "Çfarë shërbimesh ofroni?", "Sa kushton një uebfaqe?", "Sa zgjat zhvillimi?", "Dua një demo falas".
+    - Controls: Mute/Unmute microphone, Pause, End Call, and Direct WhatsApp transfer button.
 
-***
+### 4. Server API Enhancements (`server.ts`)
+- Add `/api/voice-chat` endpoint configured with `gemini-3.8-flash` or `gemini-3.8-live` handling voice conversation turns with Starwebs domain knowledge, formatted for natural speech responses (concise, conversational, in Albanian and English).
 
-### 2. User Experience & Visual Design
-
-- **Landing Page Minimalism**:
-  - The landing page flows cleanly: *Hero & Speed Engine → High Impact Stats → Services Grid & Quote Calculator → Portfolio Showcase & Live Frames → Tech Stack → Case Studies → ARBK Trust Verification → Contact*.
-  - Whitespace padding remains generous (`py-20 sm:py-28 lg:py-36`) with subtle ambient neon glows (`#dd6b4d` burnt copper and vivid cyan).
-- **Dedicated FAQ View Experience (`#faq`)**:
-  - **Header & Navigation Bar**: Top navigation bar persists seamlessly. Includes an immediate prominent "← Kthehu në Ballinë" (Return to Home) button with breadcrumb navigation.
-  - **Hero Header**: Atmospheric title *"Pyetjet e Shpeshta & Standardet e Zhvillimit"* with an interactive live search bar to quickly filter answers by keyword (e.g. *çmimi, afati, e-commerce, kodi, siguria*).
-  - **Categorized Luxury Accordions**:
-    1. *Çmimet & Preventivi* (Pricing, transparent fixed quotes, deposit structures).
-    2. *Afatet & Metodologjia* (Timelines from 2 to 6 weeks, expedited sprints, agile milestones).
-    3. *Arkitektura Teknike & Shpejtësia* (React 19, Next.js, sub-second load times, headless Shopify).
-    4. *ARBK, Kontratat & Ligjshmëria* (Official business registration, B2B contracts, invoices in Kosovo).
-    5. *Mirëmbajtja & Garancia* (Post-launch support, Core Web Vitals guarantees).
-  - **Direct Escalation Banner**: Bottom card allowing users to jump directly to WhatsApp (`+383 48 881 191`) or open the Free Demo booking modal if their question requires custom scoping.
-- **Footer Link**:
-  - Integrated into the `Agency Navigation` column as a dedicated button: `Pyetjet e Shpeshta (FAQ)`.
-  - Hover transition with burnt copper accent glow (`#ff9d82`) matching the obsidian luxury palette.
-
-***
-
-### 3. Key Product Decisions & Trade-Offs
-
-- **View Routing Strategy (URL Hash vs. External Router Library)**:
-  - *Chosen Approach*: Lightweight hash-based view controller (`window.location.hash === '#faq'` paired with React state `currentView: 'home' | 'faq'`).
-  - *Why*: Eliminates the need to install heavy external router dependencies (keeping Vite bundle size under 150kB for 99+ mobile speed score) while still supporting bookmarkable URLs, direct link sharing, and native browser back-button navigation.
-- **FAQ Data Architecture**:
-  - *Chosen Approach*: Modular data file `src/data/faqData.ts` exporting strongly-typed question/answer items grouped by category tags.
-  - *Why*: Keeps components pure and maintainable, easily editable by agency founders without touching rendering logic.
-
-***
-
-### 4. Technical Architecture & Data Strategy
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                              App.tsx                                   │
-│            State: currentView ('home' | 'faq'), hash listener          │
-└───────────────┬────────────────────────────────────────┬───────────────┘
-                │                                        │
-     [currentView === 'home']                 [currentView === 'faq']
-                │                                        │
-                ▼                                        ▼
-┌───────────────────────────────┐        ┌───────────────────────────────┐
-│     Main Landing Experience   │        │           FAQView             │
-│  - HeroSection                │        │  - Breadcrumb & Back Button   │
-│  - HighImpactStatsBar         │        │  - Search / Category Filter   │
-│  - ServicesSection            │        │  - Luxury Accordion Cards     │
-│  - PortfolioShowcase          │        │  - WhatsApp & Demo Escalation │
-│  - TechStackGrid              │        └───────────────────────────────┘
-│  - CaseStudiesSection         │                        ▲
-│  - TrustVerificationSection   │                        │
-│  - ContactSection             │                        │
-│  - Footer (with FAQ link) ────┼────────────────────────┘
-└───────────────────────────────┘
-```
-
-- **Interactive State Transitions**:
-  - Clicking `Pyetjet e Shpeshta (FAQ)` in the footer sets `currentView('faq')`, updates `window.location.hash = '#faq'`, and scrolls smoothly to top.
-  - Clicking "Kthehu në Ballinë" or selecting any section in the top navigation returns to `home` and scrolls to the selected anchor.
-  - Native `window.addEventListener('hashchange', ...)` ensures back/forward browser gestures work naturally.
+### 5. Verification & Testing
+- Compile and lint checks: `lint_applet` and `compile_applet`.
+- Verify mobile responsiveness: ensure 3D scene sleeps/hides gracefully on mobile screens without lagging.
+- Test voice assistant pill launch, microphone toggle, audio orb animations, speech synthesis playback, and modal controls.

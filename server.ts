@@ -71,6 +71,78 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
+// Specialized Voice Conversations API endpoint
+const VOICE_SYSTEM_INSTRUCTION = `You are the Starwebs Live Voice AI Assistant for starwebs.ks, an elite web engineering and digital agency in Kosovo / Europe.
+Agency details:
+- Name: starwebs.ks
+- Specialization: Custom web development, headless e-commerce (Shopify/Stripe), mobile-first optimization, bespoke dark obsidian UI/UX design.
+- Contact: WhatsApp +383 48 881 191, Instagram @starwebs.ks, ARBK registered in Kosovo.
+- Pricing: From €2,900 for mobile-first revamps, €3,800 for custom apps, €5,200 for e-commerce.
+- Timelines: 2-4 weeks for landing sprints, 4-8 weeks for flagships.
+- Load speed: Sub-second (<800ms) LCP, 100/100 Core Web Vitals.
+
+CRITICAL VOICE DIRECTIVES:
+- Your response will be spoken aloud to the user via speech synthesis.
+- Speak naturally, warmly, and concisely (2 to 3 sentences max).
+- NEVER use markdown formatting, bullets, asterisks, URLs, or brackets.
+- If the user speaks in Albanian, respond in natural, fluent Albanian. If in English, respond in English.
+- Always be ready to direct them to 'GET A FREE DEMO' or WhatsApp +383 48 881 191.`;
+
+app.post('/api/voice-chat', async (req, res) => {
+  try {
+    const { message, language = 'sq', history = [] } = req.body;
+    if (!message || typeof message !== 'string') {
+      res.status(400).json({ error: 'Message is required' });
+      return;
+    }
+
+    if (!aiClient) {
+      const fallbackReply = language === 'en'
+        ? "Hello! Welcome to starwebs.ks. We craft bespoke websites with sub-second speeds. Would you like to schedule a free demo or message us on WhatsApp?"
+        : "Përshëndetje! Mirësevini në starwebs.ks. Ne ndërtojmë uebfaqe moderne me shpejtësi nën një sekondë. Dëshironi të rezervoni një demo falas apo të na shkruani në WhatsApp?";
+      res.json({ reply: fallbackReply });
+      return;
+    }
+
+    const contents: any[] = [];
+    if (Array.isArray(history) && history.length > 0) {
+      history.slice(-4).forEach((h: { role: string; text: string }) => {
+        contents.push({
+          role: h.role === 'user' ? 'user' : 'model',
+          parts: [{ text: h.text }]
+        });
+      });
+    }
+    contents.push({
+      role: 'user',
+      parts: [{ text: message }]
+    });
+
+    const response = await aiClient.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents,
+      config: {
+        systemInstruction: VOICE_SYSTEM_INSTRUCTION,
+        temperature: 0.7,
+        maxOutputTokens: 200
+      }
+    });
+
+    const replyText = (response.text || '').replace(/[\*\_#`]/g, '').trim();
+    res.json({
+      reply: replyText || (language === 'en' 
+        ? "Thank you for reaching out to starwebs.ks. How can we help you today?" 
+        : "Faleminderit që kontaktuat starwebs.ks. Si mund t'ju ndihmojmë sot?")
+    });
+  } catch (error: any) {
+    console.error('Gemini voice chat error:', error);
+    const fallbackReply = (req.body.language === 'en')
+      ? "Welcome to starwebs.ks! We build ultra-fast, mobile-first websites. Feel free to request a free demo or contact us directly on WhatsApp."
+      : "Mirësevini në starwebs.ks! Ne ndërtojmë uebfaqe ultra të shpejta. Mund të kërkoni një demo falas ose të na kontaktoni direkt në WhatsApp.";
+    res.json({ reply: fallbackReply });
+  }
+});
+
 async function startServer() {
   const isProd = process.env.NODE_ENV === 'production';
 
