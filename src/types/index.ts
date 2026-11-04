@@ -74,3 +74,13 @@ export interface ConsultationRequest {
   timeline: string;
   message: string;
 }
+
+export interface PersonalizedDemoData {
+  businessName: string;
+  industry: string;
+  styleColor: string;
+  phoneOrEmail?: string;
+  generatedBy: 'form' | 'voice' | 'text' | 'ai';
+  refNumber: string;
+}
+

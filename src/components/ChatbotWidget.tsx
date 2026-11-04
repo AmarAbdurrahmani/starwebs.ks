@@ -18,6 +18,8 @@ import {
   Check
 } from 'lucide-react';
 
+import { PersonalizedDemoData } from '../types';
+
 interface ChatMessage {
   id: string;
   sender: 'ai' | 'user';
@@ -28,9 +30,13 @@ interface ChatMessage {
 
 interface ChatbotWidgetProps {
   onOpenDemo: () => void;
+  onTriggerPersonalizedDemo?: (data: PersonalizedDemoData) => void;
 }
 
-export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
+export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ 
+  onOpenDemo, 
+  onTriggerPersonalizedDemo 
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'text' | 'voice'>('text');
   const [inputText, setInputText] = useState('');
@@ -120,6 +126,90 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     'Bisedo në WhatsApp (+383 48 881 191)'
   ];
 
+  // Intelligent extractor for "Get a Free Demo" requests (via Voice AI and Text)
+  const extractDemoData = (text: string, source: 'voice' | 'text'): PersonalizedDemoData | null => {
+    const lower = text.toLowerCase();
+
+    // Check if intent indicates a demo request, prototype, or website build request
+    const isDemoIntent =
+      lower.includes('demo') ||
+      lower.includes('prototip') ||
+      lower.includes('krijo faqe') ||
+      lower.includes('dua faqe') ||
+      lower.includes('dua një faqe') ||
+      lower.includes('dua nje faqe') ||
+      lower.includes('më bëj faqe') ||
+      lower.includes('me bej faqe') ||
+      lower.includes('më bëj një demo') ||
+      lower.includes('me bej nje demo') ||
+      lower.includes('kërkoj demo') ||
+      lower.includes('kerkoj demo') ||
+      lower.includes('dua demo') ||
+      lower.includes('shfaq demo') ||
+      lower.includes('provo demo') ||
+      lower.includes('free demo') ||
+      lower.includes('get a demo') ||
+      lower.includes('website demo');
+
+    if (!isDemoIntent) return null;
+
+    // Detect industry
+    let industry = 'Biznes & Shërbime Profesionale';
+    if (lower.includes('restorant') || lower.includes('kafe') || lower.includes('gastronomi') || lower.includes('ushqim') || lower.includes('pica') || lower.includes('pizza') || lower.includes('bar') || lower.includes('lounge') || lower.includes('hotel')) {
+      industry = 'Gastronomi / Restorant';
+    } else if (lower.includes('dyqan') || lower.includes('rroba') || lower.includes('veshje') || lower.includes('shitje') || lower.includes('ecommerce') || lower.includes('e-commerce') || lower.includes('shop') || lower.includes('produkt')) {
+      industry = 'E-Commerce / Modë';
+    } else if (lower.includes('klinik') || lower.includes('dentar') || lower.includes('stomatolog') || lower.includes('mjek') || lower.includes('spital') || lower.includes('shendet') || lower.includes('shëndet') || lower.includes('laborator')) {
+      industry = 'Klinikë / Shëndetësi';
+    } else if (lower.includes('ndërtim') || lower.includes('ndertim') || lower.includes('patundshmeri') || lower.includes('patundshmëri') || lower.includes('arkitektur') || lower.includes('banesa') || lower.includes('real estate') || lower.includes('vila')) {
+      industry = 'Ndërtim / Real Estate';
+    } else if (lower.includes('tech') || lower.includes('saas') || lower.includes('aplikacion') || lower.includes('software') || lower.includes('startup') || lower.includes('it') || lower.includes('platform')) {
+      industry = 'Teknologji / SaaS';
+    } else if (lower.includes('avokat') || lower.includes('financ') || lower.includes('kontabilitet') || lower.includes('konsulenc') || lower.includes('ligj') || lower.includes('audit')) {
+      industry = 'Financë & Shërbime Ligjore';
+    }
+
+    // Detect style preference
+    let styleColor = 'Obsidian Dark & Burnt Orange';
+    if (lower.includes('art') || lower.includes('gold') || lower.includes('zeze') || lower.includes('luksoze') || lower.includes('premium')) {
+      styleColor = 'Luxury Gold & Jet Black';
+    } else if (lower.includes('gjelb') || lower.includes('emerald') || lower.includes('jade') || lower.includes('green') || lower.includes('natyral')) {
+      styleColor = 'Emerald & Jade Glow';
+    } else if (lower.includes('kalter') || lower.includes('kaltër') || lower.includes('blu') || lower.includes('cyan') || lower.includes('blue') || lower.includes('modern')) {
+      styleColor = 'Cyber Cyan & Slate';
+    }
+
+    // Extract business name if specified
+    let businessName = '';
+    const match = text.match(/(?:për|per|for|quhet|biznesi|kompania|restoranti|dyqani|klinika|emri)\s+([A-Za-z0-9ÇçËë\s&'-]{2,28})/i);
+    if (match && match[1]) {
+      const candidate = match[1]
+        .replace(/\b(ju lutem|faleminderit|nje|një|demo|faqe|web|te|të|lutem|dhe|ose|falas)\b.*$/i, '')
+        .trim();
+      if (candidate.length >= 2) {
+        businessName = candidate.charAt(0).toUpperCase() + candidate.slice(1);
+      }
+    }
+
+    if (!businessName) {
+      if (industry.includes('Gastronomi')) businessName = 'Artisan Restorant & Bar';
+      else if (industry.includes('E-Commerce')) businessName = 'Nordic Apparel Store';
+      else if (industry.includes('Klinikë')) businessName = 'Klinika Dentare & Care';
+      else if (industry.includes('Ndërtim')) businessName = 'Prime Living Real Estate';
+      else if (industry.includes('Teknologji')) businessName = 'NextGen SaaS Platform';
+      else businessName = 'Projekti Juaj Ekskluziv';
+    }
+
+    return {
+      businessName,
+      industry,
+      styleColor,
+      phoneOrEmail: '',
+      generatedBy: source,
+      refNumber: 'SW-DEMO-' + Math.floor(100000 + Math.random() * 900000)
+    };
+  };
+
   // Text Chat Handler
   const handleSendPrompt = async (textToSend: string) => {
     if (!textToSend.trim() || isLoading) return;
@@ -134,6 +224,43 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     setMessages((prev) => [...prev, userMessage]);
     setInputText('');
     setIsLoading(true);
+
+    // Check if user is asking for a demo via text
+    const detectedDemo = extractDemoData(textToSend, 'text');
+    if (detectedDemo) {
+      const textReply = `✨ Kemi gjeneruar me sukses demonstrimin interaktiv për **${detectedDemo.businessName}** (${detectedDemo.industry}) me stilin **${detectedDemo.styleColor}**!\n\nDritarja e demo-s është hapur automatikisht në ekran me shpejtësi 100/100 dhe simulim të plotë Desktop & Mobile. Mund të klikoni butonin **"E dua këtë uebfaqe - Kontakto në WhatsApp"** për të filluar punën menjëherë me ekipin tonë.`;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: 'ai-' + Date.now(),
+          sender: 'ai',
+          text: textReply,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          quickActions: [
+            {
+              label: `Shiko Demon (${detectedDemo.businessName}) 🚀`,
+              action: () => onTriggerPersonalizedDemo && onTriggerPersonalizedDemo(detectedDemo)
+            },
+            {
+              label: 'Kontakto në WhatsApp 💬',
+              action: () => {
+                const text = `Përshëndetje starwebs.ks! Gjenerova me Starwebs AI demon për "${detectedDemo.businessName}" (${detectedDemo.industry}, Ref: ${detectedDemo.refNumber}).`;
+                window.open(`https://wa.me/38348881191?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+              }
+            }
+          ]
+        }
+      ]);
+
+      setIsLoading(false);
+      if (onTriggerPersonalizedDemo) {
+        setTimeout(() => {
+          onTriggerPersonalizedDemo(detectedDemo);
+        }, 400);
+      }
+      return;
+    }
 
     try {
       const response = await fetch('/api/chat', {
@@ -252,8 +379,47 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
     setVoiceMessages((prev) => [...prev, userMessage]);
     setVoiceTranscript('');
     latestTranscriptRef.current = '';
-    setIsVoiceThinking(true);
     stopListening();
+
+    // Check if voice query is requesting a demo
+    const detectedDemo = extractDemoData(textToSend, 'voice');
+    if (detectedDemo) {
+      const voiceReply = voiceLanguage === 'en'
+        ? `Generating your interactive preview demo for ${detectedDemo.businessName} in ${detectedDemo.industry}! Opening your customized live demo on screen right now.`
+        : `Po gjeneroj menjëherë demonstrimin tuaj interaktiv për ${detectedDemo.businessName} në industrinë ${detectedDemo.industry}! Po hap dritaren e demo-s tani në ekran.`;
+
+      const aiMessage: ChatMessage = {
+        id: 'voice-ai-' + Date.now(),
+        sender: 'ai',
+        text: `✨ Gjenerova me sukses demonstrimin interaktiv për **${detectedDemo.businessName}** (${detectedDemo.industry})!\n\nDritarja interaktive e demo-s u hap në ekran. Mund të testoni pamjen në Desktop/Mobile dhe të dërgoni kërkesën direkt në WhatsApp.`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        quickActions: [
+          {
+            label: `Hap Përsëri Demon (${detectedDemo.businessName}) 🚀`,
+            action: () => onTriggerPersonalizedDemo && onTriggerPersonalizedDemo(detectedDemo)
+          },
+          {
+            label: 'Kontakto në WhatsApp 💬',
+            action: () => {
+              const text = `Përshëndetje starwebs.ks! Gjenerova me Voice AI demon e personalizuar për "${detectedDemo.businessName}" (${detectedDemo.industry}, Ref: ${detectedDemo.refNumber}).`;
+              window.open(`https://wa.me/38348881191?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+            }
+          }
+        ]
+      };
+
+      setVoiceMessages((prev) => [...prev, aiMessage]);
+      speakVoiceReply(voiceReply);
+
+      if (onTriggerPersonalizedDemo) {
+        setTimeout(() => {
+          onTriggerPersonalizedDemo(detectedDemo);
+        }, 500);
+      }
+      return;
+    }
+
+    setIsVoiceThinking(true);
 
     try {
       const res = await fetch('/api/voice-chat', {
@@ -992,9 +1158,12 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ onOpenDemo }) => {
                 {/* Quick Voice Inquiry Chips */}
                 <div className="px-3 py-2 bg-[#140e0d] border-t border-white/[0.08] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
                   {[
+                    'Dua një Demo Falas',
+                    'Dua Demo për Restorant',
+                    'Dua Demo për Dyqan E-Commerce',
+                    'Dua Demo për Klinikë',
                     'Sa kushton një uebfaqe?',
                     'Sa zgjat zhvillimi?',
-                    'Dua një Demo Falas',
                     'WhatsApp (+383 48 881 191)'
                   ].map((chip, cIdx) => (
                     <button

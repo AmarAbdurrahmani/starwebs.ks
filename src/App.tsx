@@ -11,9 +11,10 @@ import { ContactSection } from './components/ContactSection';
 import { FAQView } from './components/FAQView';
 import { FreeDemoModal } from './components/FreeDemoModal';
 import { LiveDemoModal } from './components/LiveDemoModal';
+import { PersonalizedDemoPreviewModal } from './components/PersonalizedDemoPreviewModal';
 import { ChatbotWidget } from './components/ChatbotWidget';
 import { Footer } from './components/Footer';
-import { PortfolioProject } from './types';
+import { PortfolioProject, PersonalizedDemoData } from './types';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'faq'>(() => {
@@ -27,6 +28,8 @@ export default function App() {
   const [isFreeDemoOpen, setIsFreeDemoOpen] = useState<boolean>(false);
   const [passedQuoteData, setPassedQuoteData] = useState<any>(null);
   const [activeLiveDemoProject, setActiveLiveDemoProject] = useState<PortfolioProject | null>(null);
+  const [personalizedDemoData, setPersonalizedDemoData] = useState<PersonalizedDemoData | null>(null);
+  const [isPersonalizedDemoOpen, setIsPersonalizedDemoOpen] = useState<boolean>(false);
 
   // Sync hash routing on popstate / hashchange (e.g. browser back/forward buttons)
   useEffect(() => {
@@ -103,6 +106,17 @@ export default function App() {
     setActiveLiveDemoProject(project);
   };
 
+  const handleGenerateDemoFromForm = (data: PersonalizedDemoData) => {
+    setIsFreeDemoOpen(false);
+    setPersonalizedDemoData(data);
+    setIsPersonalizedDemoOpen(true);
+  };
+
+  const handleTriggerDemoFromAI = (data: PersonalizedDemoData) => {
+    setPersonalizedDemoData(data);
+    setIsPersonalizedDemoOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-black text-[#fbf8f5] selection:bg-[#dd6b4d]/40 selection:text-white relative bg-grid-pattern overflow-x-hidden">
       {/* Ambient neon radial glows (Burnt Orange & Vivid Cyan) */}
@@ -175,6 +189,7 @@ export default function App() {
         isOpen={isFreeDemoOpen}
         onClose={() => setIsFreeDemoOpen(false)}
         presetQuoteData={passedQuoteData}
+        onGenerateDemo={handleGenerateDemoFromForm}
       />
 
       {/* Interactive Live Website Mockup Preview Modal */}
@@ -185,9 +200,21 @@ export default function App() {
         onOpenDemoRequest={handleOpenFreeDemoDefault}
       />
 
+      {/* Interactive Personalized Demo Preview Modal (Generated via Form or Voice AI) */}
+      <PersonalizedDemoPreviewModal
+        demoData={personalizedDemoData}
+        isOpen={isPersonalizedDemoOpen}
+        onClose={() => setIsPersonalizedDemoOpen(false)}
+        onOpenConsultationForm={() => {
+          setIsPersonalizedDemoOpen(false);
+          setIsFreeDemoOpen(true);
+        }}
+      />
+
       {/* Single Unified Floating Interactive AI Assistant (Text & Voice AI) */}
       <ChatbotWidget
         onOpenDemo={handleOpenFreeDemoDefault}
+        onTriggerPersonalizedDemo={handleTriggerDemoFromAI}
       />
     </div>
   );
