@@ -18,7 +18,8 @@ import {
   Timer,
   Copy,
   Check,
-  Palette
+  Palette,
+  Menu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PersonalizedDemoData } from '../types';
@@ -265,7 +266,7 @@ export const PersonalizedDemoPreviewModal: React.FC<PersonalizedDemoPreviewModal
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 16 }}
           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-5xl max-h-[96vh] overflow-y-auto rounded-3xl card-chocolate-elevated border border-white/[0.15] p-4 sm:p-7 bg-[#120c0b] shadow-[0_24px_70px_rgba(0,0,0,0.98)]"
+          className="relative w-full max-w-5xl max-h-[96vh] overflow-y-auto overflow-x-hidden rounded-3xl card-chocolate-elevated border border-white/[0.15] p-3 sm:p-7 bg-[#120c0b] shadow-[0_24px_70px_rgba(0,0,0,0.98)]"
         >
           {/* Top Specular Line with dynamic theme color */}
           <div 
@@ -278,33 +279,33 @@ export const PersonalizedDemoPreviewModal: React.FC<PersonalizedDemoPreviewModal
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-xl bg-white/[0.06] text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.12] transition-colors cursor-pointer z-20"
+            className="absolute top-3 right-3 sm:top-5 sm:right-5 p-2 rounded-xl bg-white/[0.06] text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/[0.12] transition-colors cursor-pointer z-20"
             title="Mbyll demonstrimin"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Modal Top Header Bar */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-4 mb-4 border-b border-white/[0.08] gap-3">
-            <div>
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                <span className="w-2.5 h-2.5 rounded-full animate-pulse transition-colors duration-300" style={{ backgroundColor: currentPalette.primary }} />
-                <span className={`font-mono-tabular text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${currentPalette.accentText}`}>
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-3.5 mb-3.5 border-b border-white/[0.08] gap-3 max-w-full">
+            <div className="min-w-0 max-w-full pr-8 sm:pr-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
+                <span className="w-2.5 h-2.5 rounded-full animate-pulse transition-colors duration-300 shrink-0" style={{ backgroundColor: currentPalette.primary }} />
+                <span className={`font-mono-tabular text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-colors duration-300 truncate max-w-[200px] sm:max-w-none ${currentPalette.accentText}`}>
                   DEMO E PERSONALIZUAR · {generatedBy === 'voice' ? 'GJENERUAR ME ZË (VOICE AI)' : generatedBy === 'text' || generatedBy === 'ai' ? 'GJENERUAR ME STARWEBS AI' : 'GJENERUAR PËRMES FORMULARIT'}
                 </span>
-                <span className="text-white/20">|</span>
+                <span className="text-white/20 hidden sm:inline">|</span>
                 <button
                   onClick={handleCopyRefCode}
-                  className="px-2 py-0.5 rounded-md bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-[11px] font-mono-tabular text-neutral-300 flex items-center gap-1 cursor-pointer transition-colors"
+                  className="px-2 py-0.5 rounded-md bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-[10px] sm:text-[11px] font-mono-tabular text-neutral-300 flex items-center gap-1 cursor-pointer transition-colors shrink-0"
                   title="Kliko për të kopjuar kodin e referencës"
                 >
                   {copiedCode ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                   <span>Kodi: {refNumber}</span>
                 </button>
               </div>
-              <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#fbf8f5] flex items-center gap-2.5">
-                <span>{businessName}</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-neutral-300 font-sans font-normal">
+              <h2 className="font-display text-lg sm:text-2xl lg:text-3xl font-extrabold text-[#fbf8f5] flex flex-wrap items-center gap-2 max-w-full break-words">
+                <span className="break-words">{businessName}</span>
+                <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-neutral-300 font-sans font-normal shrink-0">
                   {industry}
                 </span>
               </h2>
@@ -456,99 +457,110 @@ export const PersonalizedDemoPreviewModal: React.FC<PersonalizedDemoPreviewModal
               )}
 
               {/* Simulated Website Nav */}
-              <div className="px-4 sm:px-6 py-3.5 bg-black/80 backdrop-blur-md border-b border-white/[0.06] flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className="px-3 sm:px-6 py-2.5 sm:py-3 bg-black/85 backdrop-blur-md border-b border-white/[0.08] flex items-center justify-between gap-2 min-w-0 max-w-full">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink">
                   <span 
-                    className="w-2.5 h-2.5 rounded-full transition-colors duration-300"
+                    className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full shrink-0 transition-colors duration-300"
                     style={{ backgroundColor: currentPalette.primary }}
                   />
-                  <span className="font-display font-extrabold tracking-tight text-sm text-[#fbf8f5] uppercase">
+                  <span className="font-display font-extrabold tracking-tight text-xs sm:text-sm text-[#fbf8f5] uppercase truncate max-w-[120px] sm:max-w-[220px]">
                     {businessName}
                   </span>
                 </div>
 
-                <div className="hidden sm:flex items-center gap-4 text-xs text-neutral-400">
+                <div className="hidden md:flex items-center gap-4 text-xs text-neutral-400 shrink-0">
                   <span className="hover:text-white cursor-pointer transition-colors" onClick={() => handleSimulateAction('Hapja e faqeve të shërbimeve')}>Shërbimet</span>
                   <span className="hover:text-white cursor-pointer transition-colors" onClick={() => handleSimulateAction('Shikimi i portfolio')}>Galeria</span>
                   <span className="hover:text-white cursor-pointer transition-colors" onClick={() => handleSimulateAction('Leximi i rreth nesh')}>Rreth Nesh</span>
                 </div>
 
-                <button
-                  onClick={() => handleSimulateAction(indContent.cta)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm cursor-pointer hover:scale-105 active:scale-95 transition-all"
-                  style={{
-                    backgroundColor: currentPalette.primary
-                  }}
-                >
-                  {indContent.cta}
-                </button>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    onClick={() => handleSimulateAction(indContent.cta)}
+                    className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold text-white shadow-sm cursor-pointer hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+                    style={{
+                      backgroundColor: currentPalette.primary
+                    }}
+                  >
+                    {indContent.cta}
+                  </button>
+
+                  <button 
+                    onClick={() => handleSimulateAction('Hapja e Menysë Mobile')}
+                    className="p-1 rounded-md bg-white/[0.06] hover:bg-white/[0.12] text-neutral-300 hover:text-white transition-colors cursor-pointer md:hidden"
+                    title="Menuja e faqes"
+                  >
+                    <Menu className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
 
               {/* Simulated Hero Section */}
-              <div className="p-5 sm:p-8 bg-gradient-to-b from-[#140e0d] to-black relative overflow-hidden">
+              <div className="p-3.5 sm:p-7 bg-gradient-to-b from-[#140e0d] to-black relative overflow-hidden w-full max-w-full">
                 <div 
                   className="absolute top-0 right-0 w-72 h-72 rounded-full pointer-events-none filter blur-[80px] opacity-25 transition-all duration-300"
                   style={{ backgroundColor: currentPalette.primary }}
                 />
 
-                <div className="max-w-2xl relative z-10">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[11px] text-neutral-300 mb-3">
-                    <Zap className="w-3.5 h-3.5" style={{ color: currentPalette.primary }} />
-                    <span>Arkitekturë Ultra-Fast React 19 & Tailwind v4</span>
+                <div className="max-w-2xl relative z-10 w-full">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[10px] sm:text-[11px] text-neutral-300 mb-2.5 max-w-full">
+                    <Zap className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" style={{ color: currentPalette.primary }} />
+                    <span className="truncate">Arkitekturë Ultra-Fast React 19 & Tailwind v4</span>
                   </div>
 
-                  <h1 className="font-display text-xl sm:text-3xl font-extrabold text-[#fbf8f5] leading-tight mb-2.5">
+                  {/* Responsive H1 Title */}
+                  <h1 className="font-display font-extrabold text-[#fbf8f5] leading-tight mb-2.5 text-base sm:text-2xl md:text-3xl lg:text-4xl break-words hyphens-auto max-w-full">
                     {indContent.tagline}
                   </h1>
 
-                  <p className="text-xs sm:text-sm text-[#b3a8a2] leading-relaxed mb-5">
+                  <p className="text-xs sm:text-sm text-[#b3a8a2] leading-relaxed mb-4 sm:mb-5 max-w-full break-words">
                     {indContent.heroSub}
                   </p>
 
-                  <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 max-w-full">
                     <button
                       onClick={() => handleSimulateAction(`CTA Kryesore: "${indContent.cta}"`)}
-                      className="px-5 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg hover:scale-105 active:scale-95 transition-all"
+                      className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:scale-105 active:scale-95 transition-all"
                       style={{
                         backgroundColor: currentPalette.primary,
                         boxShadow: `0 0 20px ${currentPalette.glow}`
                       }}
                     >
-                      <span>{indContent.cta}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <span className="truncate">{indContent.cta}</span>
+                      <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                     </button>
 
                     <button
                       onClick={() => handleSimulateAction('Testimi i Shpejtësisë së Ngarkimit')}
-                      className="px-4 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-neutral-300 hover:text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer hover:bg-white/[0.1] transition-colors"
+                      className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-neutral-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 cursor-pointer hover:bg-white/[0.1] transition-colors"
                     >
-                      <Gauge className="w-3.5 h-3.5" />
+                      <Gauge className="w-3.5 h-3.5 shrink-0" />
                       <span>Testo Shpejtësinë</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Simulated Features Grid */}
-                <div className="mt-6 pt-5 border-t border-white/[0.08] grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-white/[0.08] grid grid-cols-1 sm:grid-cols-3 gap-2 w-full max-w-full">
                   {indContent.features.map((feat, idx) => (
                     <div 
                       key={idx}
-                      className="p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center gap-2.5 text-xs text-[#fbf8f5]"
+                      className="p-2.5 sm:p-3 rounded-xl bg-black/40 border border-white/[0.06] flex items-center gap-2 text-[11px] sm:text-xs text-[#fbf8f5] max-w-full overflow-hidden"
                     >
-                      <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: currentPalette.primary }} />
-                      <span>{feat}</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" style={{ color: currentPalette.primary }} />
+                      <span className="truncate sm:whitespace-normal">{feat}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Quantified Metrics Bar */}
-                <div className="mt-4 grid grid-cols-3 gap-2.5 text-center font-mono-tabular">
+                <div className="mt-3.5 sm:mt-4 grid grid-cols-3 gap-1.5 sm:gap-2.5 text-center font-mono-tabular w-full max-w-full">
                   {indContent.metrics.map((m, mIdx) => (
-                    <div key={mIdx} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                      <span className="block text-base sm:text-xl font-extrabold text-[#fbf8f5]">
+                    <div key={mIdx} className="p-2 sm:p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] overflow-hidden">
+                      <span className="block text-sm sm:text-lg md:text-xl font-extrabold text-[#fbf8f5] truncate">
                         {m.value}
                       </span>
-                      <span className="text-[10px] text-[#b3a8a2] block mt-0.5">
+                      <span className="text-[9px] sm:text-[10px] text-[#b3a8a2] block mt-0.5 truncate">
                         {m.label}
                       </span>
                     </div>
@@ -559,52 +571,54 @@ export const PersonalizedDemoPreviewModal: React.FC<PersonalizedDemoPreviewModal
           </div>
 
           {/* 2. LIVE CONVERSION URGENCY BANNER (48h countdown, -15% & free speed audit) */}
-          <div className="mb-4 p-4 rounded-2xl bg-gradient-to-r from-[#1c1210] via-[#140e0d] to-[#1a100e] border border-amber-500/30 shadow-lg relative overflow-hidden">
+          <div className="mb-3.5 sm:mb-4 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#1c1210] via-[#140e0d] to-[#1a100e] border border-amber-500/30 shadow-lg relative overflow-hidden w-full max-w-full">
             {/* Subtle amber radial accent */}
             <div className="absolute top-0 right-0 w-64 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
-              <div className="space-y-1.5">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 relative z-10 w-full max-w-full">
+              <div className="space-y-1.5 min-w-0 max-w-full">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="px-2.5 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono-tabular text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
                     <Timer className="w-3 h-3 text-amber-400 animate-spin" />
                     <span>Ofertë Ekskluzive me Kohë të Kufizuar</span>
                   </span>
-                  <span className="text-[11px] text-neutral-400 font-mono-tabular">
+                  <span className="text-[10px] sm:text-[11px] text-neutral-400 font-mono-tabular">
                     Rezervuar për kodin: <strong className="text-white">{refNumber}</strong>
                   </span>
                 </div>
 
-                <h3 className="font-display text-sm sm:text-base font-extrabold text-[#fbf8f5] flex items-center gap-2">
+                <h3 className="font-display text-xs sm:text-base font-extrabold text-[#fbf8f5] flex items-center gap-2">
                   <span>Përfitoni 15% Zbritje & Auditim Falas të Shpejtësisë</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
                 </h3>
 
-                <p className="text-xs text-[#b3a8a2] leading-relaxed max-w-2xl">
+                <p className="text-[11px] sm:text-xs text-[#b3a8a2] leading-relaxed max-w-2xl break-words">
                   Nëse kontaktoni brenda periudhës 48-orëshe të kësaj demoje, ekipi inxhinierik i Starwebs zbaton menjëherë zbritjen prej 15% dhe përfshin falas konfigurimin e plotë të CDN globale dhe testin Google Lighthouse 100/100.
                 </p>
               </div>
 
               {/* Real-Time Live Clock Display */}
-              <div className="flex items-center gap-2 self-start lg:self-center shrink-0 p-2.5 rounded-xl bg-black/60 border border-white/10 font-mono-tabular shadow-inner">
-                <Clock className="w-4 h-4 text-amber-400" />
-                <div className="flex items-center gap-1 text-center">
-                  <div className="px-1.5 py-1 rounded bg-neutral-900 border border-white/10">
-                    <span className="text-xs sm:text-sm font-extrabold text-amber-300">{String(timeLeft.hours).padStart(2, '0')}</span>
-                    <span className="text-[8px] text-neutral-400 block leading-none">ORË</span>
-                  </div>
-                  <span className="text-amber-400 font-bold">:</span>
-                  <div className="px-1.5 py-1 rounded bg-neutral-900 border border-white/10">
-                    <span className="text-xs sm:text-sm font-extrabold text-amber-300">{String(timeLeft.minutes).padStart(2, '0')}</span>
-                    <span className="text-[8px] text-neutral-400 block leading-none">MIN</span>
-                  </div>
-                  <span className="text-amber-400 font-bold">:</span>
-                  <div className="px-1.5 py-1 rounded bg-neutral-900 border border-white/10">
-                    <span className="text-xs sm:text-sm font-extrabold text-amber-300">{String(timeLeft.seconds).padStart(2, '0')}</span>
-                    <span className="text-[8px] text-neutral-400 block leading-none">SEK</span>
+              <div className="flex items-center justify-between sm:justify-start gap-2 self-stretch lg:self-center shrink-0 p-2 sm:p-2.5 rounded-xl bg-black/60 border border-white/10 font-mono-tabular shadow-inner max-w-full">
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
+                  <div className="flex items-center gap-1 text-center">
+                    <div className="px-1.5 py-1 rounded bg-neutral-900 border border-white/10">
+                      <span className="text-xs sm:text-sm font-extrabold text-amber-300">{String(timeLeft.hours).padStart(2, '0')}</span>
+                      <span className="text-[7px] sm:text-[8px] text-neutral-400 block leading-none">ORË</span>
+                    </div>
+                    <span className="text-amber-400 font-bold">:</span>
+                    <div className="px-1.5 py-1 rounded bg-neutral-900 border border-white/10">
+                      <span className="text-xs sm:text-sm font-extrabold text-amber-300">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                      <span className="text-[7px] sm:text-[8px] text-neutral-400 block leading-none">MIN</span>
+                    </div>
+                    <span className="text-amber-400 font-bold">:</span>
+                    <div className="px-1.5 py-1 rounded bg-neutral-900 border border-white/10">
+                      <span className="text-xs sm:text-sm font-extrabold text-amber-300">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                      <span className="text-[7px] sm:text-[8px] text-neutral-400 block leading-none">SEK</span>
+                    </div>
                   </div>
                 </div>
-                <div className="pl-2 border-l border-white/10 text-[10px] text-neutral-400 hidden sm:block">
+                <div className="pl-2 border-l border-white/10 text-[9px] sm:text-[10px] text-neutral-400">
                   <span className="text-emerald-400 font-bold block">● 2 Vende të Lira</span>
                   <span>këtë javë</span>
                 </div>
@@ -613,30 +627,30 @@ export const PersonalizedDemoPreviewModal: React.FC<PersonalizedDemoPreviewModal
           </div>
 
           {/* 3. MAIN CALL TO ACTION: OPTIMIZED WHATSAPP CONVERSION BUTTON */}
-          <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-950/70 via-[#171211] to-[#1e1310] border border-emerald-500/40 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-1">
+          <div className="p-3.5 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-950/70 via-[#171211] to-[#1e1310] border border-emerald-500/40 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 w-full max-w-full overflow-hidden">
+            <div className="space-y-1 min-w-0 max-w-full">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="font-mono-tabular text-xs font-bold uppercase tracking-wider text-emerald-400">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="font-mono-tabular text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400">
                   Gati për Fillim & Diskutim
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-[#fbf8f5] font-display font-bold">
+              <p className="text-xs sm:text-sm text-[#fbf8f5] font-display font-bold break-words">
                 Dëshironi këtë uebfaqe për <span className="underline decoration-emerald-400">{businessName}</span> me stilin <span className={currentPalette.accentText}>{currentPalette.name}</span>?
               </p>
-              <p className="text-xs text-[#b3a8a2]">
+              <p className="text-[11px] sm:text-xs text-[#b3a8a2] break-words">
                 Klikoni butonin për të dërguar automatikisht kodin e referencës <strong className="text-neutral-200">{refNumber}</strong> në WhatsApp për të nisur bisedën direkt me ne.
               </p>
             </div>
 
             {/* ACTION BUTTONS: Direct WhatsApp + Quick Copy */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
               <button
                 onClick={handleCopyRefCode}
-                className="px-3.5 py-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-neutral-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-neutral-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0"
                 title="Kopjo kodin e referencës"
               >
-                {copiedCode ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedCode ? 'Kodi u kopjua!' : 'Kopjo Kodin'}</span>
               </button>
 
@@ -644,10 +658,10 @@ export const PersonalizedDemoPreviewModal: React.FC<PersonalizedDemoPreviewModal
                 href={whatsAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs sm:text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(16,185,129,0.5)] hover:shadow-[0_0_35px_rgba(16,185,129,0.7)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                className="px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs sm:text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(16,185,129,0.5)] hover:shadow-[0_0_35px_rgba(16,185,129,0.7)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-center shrink-0"
               >
-                <MessageCircle className="w-5 h-5 fill-current" />
-                <span>E dua këtë uebfaqe - Kontakto në WhatsApp</span>
+                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 fill-current shrink-0" />
+                <span className="truncate sm:whitespace-normal">E dua këtë uebfaqe - Kontakto në WhatsApp</span>
               </a>
             </div>
           </div>
