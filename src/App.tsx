@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { TopBar } from './components/TopBar';
 import { HeroSection } from './components/HeroSection';
 import { HighImpactStatsBar } from './components/HighImpactStatsBar';
@@ -216,6 +217,9 @@ export default function App() {
         onOpenDemo={handleOpenFreeDemoDefault}
         onTriggerPersonalizedDemo={handleTriggerDemoFromAI}
       />
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }
