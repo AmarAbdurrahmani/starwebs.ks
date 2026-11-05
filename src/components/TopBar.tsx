@@ -12,15 +12,15 @@ export const TopBar: React.FC<TopBarProps> = ({
   onNavigate,
   onOpenFreeDemo
 }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Close mobile drawer on Escape key or screen resize
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMobileMenuOpen(false);
+      if (e.key === 'Escape') setIsOpen(false);
     };
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setMobileMenuOpen(false);
+      if (window.innerWidth >= 1024) setIsOpen(false);
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -31,21 +31,9 @@ export const TopBar: React.FC<TopBarProps> = ({
     };
   }, []);
 
-  // Lock body scroll when mobile menu is open to prevent background scrolling
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
-
   const handleNavClick = (sectionId: string) => {
     onNavigate(sectionId);
-    setMobileMenuOpen(false);
+    setIsOpen(false);
   };
 
   const navItems = [
@@ -57,7 +45,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-neutral-950/85 backdrop-blur-md border-b border-white/10 transition-all print:hidden">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-neutral-950/90 backdrop-blur-md border-b border-white/10 transition-all print:hidden">
       <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-2 sm:gap-4 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
         {/* Zone 1: Official Circular Emblem + Brand Wordmark */}
         <div className="flex items-center shrink-0">
@@ -143,105 +131,77 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Mobile Hamburger Toggle Button */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden p-1.5 sm:p-2 rounded-lg bg-white/5 border border-white/10 text-[#fbf8f5] hover:text-[#dd6b4d] hover:bg-white/10 transition-colors cursor-pointer shrink-0"
             aria-label="Toggle navigation menu"
-            aria-expanded={mobileMenuOpen}
+            aria-expanded={isOpen}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-[#ff9d82]" /> : <Menu className="w-5 h-5" />}
+            {isOpen ? <X className="w-5 h-5 text-[#ff9d82]" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Full-Screen Overlay Menu (fixed inset-0 z-50 max-w-full) */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex flex-col w-full max-w-full h-full bg-[#0d0908]/98 backdrop-blur-3xl animate-in fade-in duration-200">
-          {/* Top Bar inside Overlay */}
-          <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/10 shrink-0 bg-neutral-950/90">
-            <div className="flex items-center gap-2">
-              <div className="relative w-7 h-7 rounded-full overflow-hidden border border-[#dd6b4d]/40 shadow-[0_0_10px_rgba(221,107,77,0.3)] bg-[#140e0d] p-0.5">
-                <img
-                  src="/assets/aistudio/logo_e0adced0.png"
-                  alt="STARWEBS.KS Logo"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-              <span className="font-display text-base font-extrabold tracking-tight text-[#fbf8f5]">
-                STARWEBS<span className="text-[#dd6b4d]">.KS</span>
-              </span>
-            </div>
+      {/* Dimmed backdrop below header */}
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 top-[52px] sm:top-[60px] bg-black/70 backdrop-blur-sm -z-10 lg:hidden animate-in fade-in duration-200"
+          aria-hidden="true"
+        />
+      )}
 
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2 rounded-xl bg-white/5 border border-white/10 text-[#fbf8f5] hover:text-[#dd6b4d] hover:bg-white/10 transition-colors cursor-pointer"
-              aria-label="Mbyll menynë"
-            >
-              <X className="w-5 h-5 text-[#ff9d82]" />
-            </button>
-          </div>
-
-          {/* Scrollable Navigation Body */}
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 flex flex-col justify-between max-w-full">
-            <nav className="flex flex-col space-y-2">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`text-left px-4 py-3 rounded-xl text-sm sm:text-base font-bold uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${
-                    activeSection === item.id
-                      ? 'bg-[#dd6b4d]/20 text-[#ff9d82] border-l-4 border-[#dd6b4d]'
-                      : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/5'
-                  }`}
-                >
-                  <span>{item.label}</span>
-                  {activeSection === item.id && (
-                    <span className="w-2 h-2 rounded-full bg-[#dd6b4d] shadow-[0_0_8px_#dd6b4d]" />
-                  )}
-                </button>
-              ))}
-
+      {/* Clean Mobile Dropdown Menu strictly below header */}
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 w-full bg-[#120c0b]/98 backdrop-blur-2xl border-b border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-50 lg:hidden px-4 sm:px-6 py-4 space-y-4 max-h-[calc(100vh-64px)] overflow-y-auto animate-in slide-in-from-top-2 duration-200">
+          <nav className="flex flex-col space-y-1.5">
+            {navItems.map((item) => (
               <button
-                onClick={() => handleNavClick('faq')}
-                className={`text-left px-4 py-3 rounded-xl text-sm sm:text-base font-bold uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${
-                  activeSection === 'faq'
+                key={item.id}
+                onClick={() => handleNavClick(item.id)}
+                className={`text-left px-3.5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${
+                  activeSection === item.id
                     ? 'bg-[#dd6b4d]/20 text-[#ff9d82] border-l-4 border-[#dd6b4d]'
                     : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/5'
                 }`}
               >
-                <span>Pyetjet e Shpeshta (FAQ)</span>
-                {activeSection === 'faq' && (
-                  <span className="w-2 h-2 rounded-full bg-[#dd6b4d] shadow-[0_0_8px_#dd6b4d]" />
+                <span>{item.label}</span>
+                {activeSection === item.id && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] shadow-[0_0_6px_#dd6b4d]" />
                 )}
               </button>
-            </nav>
+            ))}
 
-            {/* Bottom Actions & Trust Badges */}
-            <div className="pt-5 mt-5 border-t border-white/10 flex flex-col gap-2.5">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenFreeDemo();
-                }}
-                className="btn-primary-orange w-full py-3 rounded-xl text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-lg cursor-pointer"
-              >
-                <span>GET A FREE DEMO</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+            <button
+              onClick={() => handleNavClick('faq')}
+              className={`text-left px-3.5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${
+                activeSection === 'faq'
+                  ? 'bg-[#dd6b4d]/20 text-[#ff9d82] border-l-4 border-[#dd6b4d]'
+                  : 'text-[#b3a8a2] hover:text-[#fbf8f5] hover:bg-white/5'
+              }`}
+            >
+              <span>Pyetjet e Shpeshta (FAQ)</span>
+              {activeSection === 'faq' && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#dd6b4d] shadow-[0_0_6px_#dd6b4d]" />
+              )}
+            </button>
+          </nav>
 
-              <a
-                href="https://wa.me/38348881191"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-semibold font-mono-tabular hover:bg-emerald-950/80 transition-colors"
-              >
-                <MessageCircle className="w-4 h-4 text-emerald-400" />
-                <span>WhatsApp: +383 48 881 191</span>
-              </a>
+          <div className="pt-3 border-t border-white/10 flex flex-col gap-2.5">
+            {/* Direct WhatsApp Contact */}
+            <a
+              href="https://wa.me/38348881191"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-semibold font-mono-tabular hover:bg-emerald-950/80 transition-colors cursor-pointer"
+            >
+              <MessageCircle className="w-4 h-4 text-emerald-400" />
+              <span>WhatsApp: +383 48 881 191</span>
+            </a>
 
-              <div className="flex items-center justify-center gap-1.5 text-xs text-[#b3a8a2]/70 pt-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#dd6b4d]" />
-                <span>Agjenci e Regjistruar në ARBK • Kosovë</span>
-              </div>
+            {/* Official Agency Trust Badge */}
+            <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#b3a8a2]/70 pt-0.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#dd6b4d]" />
+              <span>Agjenci e Regjistruar në ARBK • Kosovë</span>
             </div>
           </div>
         </div>
