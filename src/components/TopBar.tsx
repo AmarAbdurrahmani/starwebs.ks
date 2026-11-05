@@ -46,8 +46,8 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full bg-neutral-950/90 backdrop-blur-md border-b border-white/10 transition-all print:hidden">
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-2 sm:gap-4 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
-        {/* Zone 1: Official Circular Emblem + Brand Wordmark */}
+      <div className="max-w-[1440px] mx-auto flex items-center justify-between w-full px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 gap-2">
+        {/* Zone 1: Official Circular Emblem (Text hidden on mobile for clean fit) */}
         <div className="flex items-center shrink-0">
           <a
             href="#overview"
@@ -68,7 +68,8 @@ export const TopBar: React.FC<TopBarProps> = ({
               />
             </div>
             
-            <div className="flex items-center gap-1.5">
+            {/* Brand text visible from sm: (640px) upwards, hidden on mobile for maximum space */}
+            <div className="hidden sm:flex items-center gap-1.5">
               <span className="font-display text-base sm:text-lg lg:text-xl font-extrabold tracking-tight text-[#fbf8f5] group-hover:text-[#ff9d82] transition-colors whitespace-nowrap">
                 STARWEBS<span className="text-[#dd6b4d]">.KS</span>
               </span>
@@ -107,7 +108,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </nav>
 
         {/* Zone 3: CTA & Mobile Hamburger Trigger */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           {/* WhatsApp Direct Line (Desktop/Tablet) */}
           <a
             href="https://wa.me/38348881191"
@@ -122,21 +123,21 @@ export const TopBar: React.FC<TopBarProps> = ({
           {/* Action Button (Responsive CTA) */}
           <button
             onClick={onOpenFreeDemo}
-            className="btn-primary-orange btn-glow-hover px-2.5 sm:px-4 lg:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs rounded-lg uppercase tracking-wider font-bold whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 shadow-md"
+            className="btn-primary-orange btn-glow-hover px-2 sm:px-4 lg:px-5 py-1.5 sm:py-2 text-[10px] sm:text-xs rounded-lg uppercase tracking-wider font-bold whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1 sm:gap-1.5 shadow-md"
           >
             <span className="hidden sm:inline">GET A </span>
             <span>FREE DEMO</span>
-            <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
           </button>
 
-          {/* Mobile Hamburger Toggle Button */}
+          {/* Mobile Hamburger Toggle Button - Guaranteed shrink-0 to never clip */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden p-1.5 sm:p-2 rounded-lg bg-white/5 border border-white/10 text-[#fbf8f5] hover:text-[#dd6b4d] hover:bg-white/10 transition-colors cursor-pointer shrink-0"
             aria-label="Toggle navigation menu"
             aria-expanded={isOpen}
           >
-            {isOpen ? <X className="w-5 h-5 text-[#ff9d82]" /> : <Menu className="w-5 h-5" />}
+            {isOpen ? <X className="w-5 h-5 text-[#ff9d82] shrink-0" /> : <Menu className="w-5 h-5 shrink-0" />}
           </button>
         </div>
       </div>
